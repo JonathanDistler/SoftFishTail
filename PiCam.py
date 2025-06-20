@@ -1,26 +1,23 @@
-from picamera import PiCamera
+from picamera2 import Picamera2
 from time import sleep
 import os
 from datetime import datetime
 
 # Saves to home directory
 home_dir = os.environ["HOME"]
-cam = PiCamera()
+picam2 = Picamera2()
 
-# Changes resolution
-cam.resolution = (2592, 1944)
-cam.start_preview()
+# Configure camera with high resolution
+config = picam2.create_still_configuration(main={"size": (2592, 1944)})
+picam2.configure(config)
 
-# Adds a timestamp and annotation
+# Start camera
+picam2.start()
+sleep(2)  # Let camera warm up
+
+# Capture image with timestamp
 time_val = str(datetime.now())
-cam.annotate_text = f"Hello. It's Jonathan Distler: {time_val}"
-sleep(2)
+image_path = f"{home_dir}/Desktop/max.jpg"
+picam2.capture_file(image_path)
 
-cam.capture(f"{home_dir}/Desktop/max.jpg")
-cam.stop_preview()
-
-#for better fps, auto exposure mode
-#set while balance auto
-
-
-
+print(f"Photo taken at {time_val} and saved to {image_path}")
