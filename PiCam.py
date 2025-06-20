@@ -1,5 +1,5 @@
 #import statements
-from picamzero import Camera
+from picamera import Camera
 from time import sleep
 import os
 from datetime import datetime
