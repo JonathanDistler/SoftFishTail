@@ -16,8 +16,10 @@ picam2.start()
 sleep(2)  # Let camera warm up
 
 # Capture image with timestamp
-time_val = str(datetime.now())
-image_path = f"{home_dir}/Desktop/max.jpg"
-picam2.capture_file(image_path)
+shutter_number=3
+for i in range (shutter_number):
+    time_val = str(datetime.now())
+    image_path = f"{home_dir}/Desktop/max{i}.jpg"
+    picam2.capture_file(image_path)
 
-print(f"Photo taken at {time_val} and saved to {image_path}")
+    print(f"Photo taken at {time_val} and saved to {image_path}")
