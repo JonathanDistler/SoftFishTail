@@ -32,9 +32,20 @@ fish_head_id="headMesh"
 head_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, fish_head_id)
 fish_adr=model.jnt_dofadr[joint_id]
 
+# Define large local force in +x direction (relative to body frame)
+local_force = np.array([1000.0, 0.0, 0.0])  # change magnitude if needed
+
+# Get the body-to-world rotation matrix (3x3)
+xmat = data.xmat[fish_adr].reshape(3, 3)
+
+# Convert local force to world frame
+world_force = xmat @ local_force
+
+# Apply the world-frame force to the body (constant for entire sim)
+data.xfrc_applied[fish_adr, 0:3] = world_force
+
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
-        data.xfrc_applied[fish_adr, 0:3] = [100,100, 100]
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .2f}")
         position=data.xpos[1]
