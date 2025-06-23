@@ -30,8 +30,13 @@ joint_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, joint_name)
 dof_adr=model.jnt_dofadr[joint_id]
 constraint_force=0
 
+fish_head_id="headMesh"
+head_id=mujoco.mj_name2id(model,mujoco.mjtObjt.mjOBJ_JOINT, fish_head_id)
+dof_adr=model.jnt_dofadr[joint_id]
+
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
+
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .2f}")
         position=data.xpos[1]
