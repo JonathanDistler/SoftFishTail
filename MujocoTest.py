@@ -32,10 +32,11 @@ constraint_force=0
 
 fish_head_id="headMesh"
 head_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, fish_head_id)
-dof_adr=model.jnt_dofadr[joint_id]
+fish_adr=model.jnt_dofadr[joint_id]
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
+        mj_applyFT(model, data, 100, 0, fish_head, (.1, .115, .15))
 
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .2f}")
@@ -45,7 +46,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         constraint_force = data.qfrc_constraint[dof_adr]
         force.append(constraint_force)
-        #it's not moving or generating a constraint force. . . might need to improve the damper 
+        #it's not moving that much or generating a constraint force. . . might need to improve the damper and drive fish forward
         #in the simulation, the two aren't touching, so it makes since it isn't moving. . . Need to write a script to move the fish forward
         #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
