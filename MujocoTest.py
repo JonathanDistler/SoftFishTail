@@ -40,3 +40,4 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
 
+print(pos)
