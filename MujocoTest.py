@@ -19,7 +19,7 @@ fish_body_name = "head"  # adjust this name if needed
 fish_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, fish_body_name)
 
 # Define force in local frame (x-direction)
-local_force = np.array([1000.0, 0.0, 0.0])
+local_force = np.array([1000.0, 1000, 1000])
 
 # Simulate and render
 with mujoco.Renderer(model, 1600, 1600) as renderer:
@@ -39,11 +39,11 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         pos.append(np.copy(data.xpos[fish_body_id]))
 
         # Get constraint forces
-        ext_force = data.cfrc_ext[fish_body_id]
+        ext_force_fish = data.cfrc_ext[fish_body_id]
         ext_force_constraint = data.cfrc_int[slider_body_id]
-        force.append(np.copy(ext_force_constraint))
+        force.append((ext_force_constraint))
 
-        print(f"External Force Fish: {ext_force}")
+        print(f"External Force Fish: {ext_force_fish}")
         print(f"External Constraint Force: {ext_force_constraint}")
 
         external_force = data.cfrc_ext[slider_body_id]  # This is a 6-element array: [Fx, Fy, Fz, Tx, Ty, Tz]
