@@ -28,6 +28,7 @@ dof_adr=model.jnt_dofadr[joint_id]
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 1:
+        mujoco.mj_step(model, data)
         print(f"Time: {data.time: .5f}")
 
 
