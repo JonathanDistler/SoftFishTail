@@ -16,8 +16,8 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         print(f"Time: {data.time:.2f}")
         mujoco.mj_step(model,data)
 
-        constraint_force=joint_id.efc_force
         pos.append(data.xpos[1].copy)
+        constraint_force=joint_id.efc_force
         force.append(constraint_force)
         print("Force: {constraint_force}")
 
