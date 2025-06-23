@@ -2,6 +2,9 @@ import mujoco
 import mujoco.viewer
 import time
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 pathXML="C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
 model=mujoco.MjModel.from_xml_path(pathXML)
 data=mujoco.MjData(model)
@@ -40,4 +43,14 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
 
-print(pos)
+pos = np.array(pos)
+timeAxis = np.arange(pos.shape[0]) * dt
+
+### Plot Head X Position
+fig, ax = plt.subplots(figsize=(4, 3))
+ax.plot(timeAxis, pos[:, 2])
+ax.grid()
+ax.set_xlim(0, timeAxis[-1])
+ax.ticklabel_format(style="sci", axis='y', scilimits=(0,0))
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Position (m)")
