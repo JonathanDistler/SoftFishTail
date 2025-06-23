@@ -1,5 +1,5 @@
 import mujoco
-import mujoco_viewer
+import mujoco.viewer
 import time 
 
 # Use raw string for Windows path OR escape backslashes
