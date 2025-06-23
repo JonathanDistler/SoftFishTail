@@ -19,7 +19,7 @@ fish_body_name = "head"  # adjust this name if needed
 fish_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, fish_body_name)
 
 # Define force in local frame (x-direction)
-local_force = np.array([1000.0, 1000, 1000])
+local_force = np.array([-1000.0, 0, 0])
 
 # Simulate and render
 with mujoco.Renderer(model, 1600, 1600) as renderer:
