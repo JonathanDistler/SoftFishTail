@@ -36,8 +36,7 @@ fish_adr=model.jnt_dofadr[joint_id]
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
-        mj_applyFT(model, data, 100, 0, fish_head, (.1, .115, .15))
-
+        data.xfrc_applied[fish_adr, 0:3] = [100,0, 0]
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .2f}")
         position=data.xpos[1]
