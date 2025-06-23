@@ -10,6 +10,10 @@ dt = model.opt.timestep
 pos = []
 force = []
 
+slider_name="slider_body"
+slider_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, slider_name)
+
+
 # Set the body to which the force will be applied
 fish_body_name = "head"  # adjust this name if needed
 fish_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, fish_body_name)
@@ -36,8 +40,11 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         # Get constraint forces
         ext_force = data.cfrc_ext[fish_body_id]
-        int_force = data.cfrc_int[fish_body_id]
-        force.append(np.copy(ext_force))
+        ext_force_constraint = data.cfrc_int[slider_body_id]
+        force.append(np.copy(ext_force_constraint))
 
-        print(f"External Force: {ext_force}")
-        print(f"Internal Constraint Force: {int_force}")
+        print(f"External Force Fish: {ext_force}")
+        print(f"External Constraint Force: {ext_force_constraint}")
+
+        external_force = data.cfrc_ext[slider_body_id]  # This is a 6-element array: [Fx, Fy, Fz, Tx, Ty, Tz]
+        print("External force on slider_body:", external_force)
