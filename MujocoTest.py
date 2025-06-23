@@ -2,7 +2,7 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 
-pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice2.xml"
+pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
 model = mujoco.MjModel.from_xml_path(pathXML)
 data = mujoco.MjData(model)
 
