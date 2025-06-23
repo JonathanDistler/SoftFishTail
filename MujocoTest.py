@@ -45,7 +45,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         print(f"External Force Fish: {ext_force_fish}")
         print(f"External Constraint Force: {ext_force_constraint}")
-        force_slider=data.xfrc_applied[slider_body_id][:3] = [1.0, 0.0, 0.0]
+        force_slider=data.xfrc_applied[slider_body_id][:3]
         force_slider_2=data.cfrc_ext[slider_body_id]
         print(f"Force test: {force_slider}")
         print(f"Force test 2: {force_slider_2}")
