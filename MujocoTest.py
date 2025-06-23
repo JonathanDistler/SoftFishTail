@@ -33,9 +33,9 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         print(f"Time: {data.time: .5f}")
         pos.append(data.xpos[1].copy)
 
-        constraint_force = data.qfrc_constraint[dof_adr].copy
+        constraint_force = data.qfrc_constraint[dof_adr]
         force.append(constraint_force)
-        print("Force: f{constraint_force}")
+        print(f"Force: {constraint_force}")
 
 
 """
