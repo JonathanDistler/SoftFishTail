@@ -6,7 +6,7 @@ import time
 model = mujoco.MjModel.from_xml_path(r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\DistlerPractice.xml")
 data = mujoco.MjData(model)
 
-viewer = mujoco_viewer.MujocoViewer(model, data)
+viewer = mujoco.viewer.MujocoViewer(model, data)
 
 #name from the mujoco simulation 
 joint_name = 'slider_joint'
