@@ -25,10 +25,12 @@ dof_adr = model.jnt_dofadr[joint_id]
 joint_name="slider_joint"
 joint_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, joint_name)
 dof_adr=model.jnt_dofadr[joint_id]
+time_start=time.time()
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
-    while data.time< 2:
-        print(f"Time: {data.time: .2f}")
+    while time_step< 2:
+        print(f"Time: {time_step: .2f}")
+        time_step=abs(time_start()-time.time())
 
 """
 with mujoco.Renderer(model, 1600, 1600) as renderer:
