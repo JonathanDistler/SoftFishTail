@@ -18,7 +18,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
 
         pos.append(data.xpos[1].copy)
-        dofadr = model.joint_dofadr[joint_id]
+        dofadr = model.jnt_dofadr[joint_id]
         slider_force = data.qfrc_constraint[dofadr:dofadr + n_dof]
         force.append(slider_force)
         print("Force: {slider_force}")
