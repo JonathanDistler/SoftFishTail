@@ -40,5 +40,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         constraint_force = data.qfrc_constraint[dof_adr]
         force.append(constraint_force)
+        #it's not moving or generating a constraint force. . . might need to improve the damper 
+        #in the simulation, the two aren't touching, so it makes since it isn't moving. . . Need to write a script to move the fish forward
         #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
