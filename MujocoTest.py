@@ -13,13 +13,11 @@ joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, 'slider_joint')
 
 try:
     while True:
-        dofadr = model.joint(joint_id).dofadr
-        n_dof = model.joint(joint_id).dofnum
+        dofadr = model.joint_dofadr[joint_id]   # Starting DOF address of the joint
+        n_dof = model.joint_dofnum[joint_id]    # Number of DOFs for this joint
 
-        # qfrc_constraint for all DOFs of this joint
         slider_force = data.qfrc_constraint[dofadr : dofadr + n_dof]
 
-        # If single DOF, extract the scalar; else print all forces
         if n_dof == 1:
             force_value = slider_force[0]
             print(f"Force exerted by slider joint: {force_value:.4f} N")
