@@ -36,11 +36,11 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         print(f"Time: {data.time:.2f}")
         print(f"Position: {data.xpos[fish_body_id]}")
-        pos.append(np.copy(data.xpos[fish_body_id]))
+        pos.append((data.xpos[fish_body_id]))
 
         # Get constraint forces
         ext_force_fish = data.cfrc_ext[fish_body_id]
-        ext_force_constraint = data.cfrc_int[slider_body_id]
+        ext_force_constraint = data.cfrc_ext[slider_body_id]
         force.append((ext_force_constraint))
 
         print(f"External Force Fish: {ext_force_fish}")
