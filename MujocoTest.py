@@ -10,7 +10,23 @@ dt=model.opt.timestep
 frames=[]
 pos=[]
 force=[]
-joint_id="slider_joint"
+
+# Get joint ID for your slider joint by name
+joint_name = "slider_joint_name"
+joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+
+# Get the DOF address for the joint
+dof_adr = model.jnt_dofadr[joint_id]
+
+# Calculate total force acting on slider joint (applied + constraint)
+#total_force = data.qfrc_applied[dof_adr] + data.qfrc_constraint[dof_adr]
+
+
+joint_name="slider_joint"
+joint_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+dof_adr=model.jnt_dofadr[joint_id]
+
+"""
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 5:
         print(f"Time: {data.time:.2f}")
@@ -21,3 +37,4 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         force.append(constraint_force)
         print("Force: {constraint_force}")
 
+"""
