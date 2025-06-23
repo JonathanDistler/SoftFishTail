@@ -33,7 +33,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         print(f"Time: {data.time: .5f}")
         pos.append(data.xpos[1].copy)
 
-        contraint_force=joint_id.efc_force
+        contraint_force=joint_id.efc_force.copy
         force.append(constraint_force)
         print("Force: {constraint_force}")
 
