@@ -30,23 +30,13 @@ constraint_force=0
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
         mujoco.mj_step(model, data)
-        print(f"Time: {data.time: .5f}")
-        pos.append(data.xpos[1].copy)
+        print(f"Time: {data.time: .2f}")
+        position=data.xpos[1].copy
+        print(f"Position: {position}")
+        pos.append(position)
 
         constraint_force = data.qfrc_constraint[dof_adr]
         force.append(constraint_force)
+        #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
 
-
-"""
-with mujoco.Renderer(model, 1600, 1600) as renderer:
-    while data.time< 5:
-        print(f"Time: {data.time:.2f}")
-        mujoco.mj_step(model,data)
-
-        pos.append(data.xpos[1].copy)
-        constraint_force=joint_id.efc_force
-        force.append(constraint_force)
-        print("Force: {constraint_force}")
-
-"""
