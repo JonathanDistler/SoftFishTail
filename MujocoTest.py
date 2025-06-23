@@ -10,7 +10,7 @@ dt=model.opt.timestep
 frames=[]
 pos=[]
 force=[]
-
+joint_id="slider_joint"
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 5:
         print(f"Time: {data.time:.2f}")
@@ -19,7 +19,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         pos.append(data.xpos[1].copy)
         dofadr = model.jnt_dofadr[joint_id]
-        slider_force = data.qfrc_constraint[dofadr:dofadr + n_dof]
+        slider_force = data.qfrc_constraint[dofadr:dofadr]
         force.append(slider_force)
         print("Force: {slider_force}")
 
