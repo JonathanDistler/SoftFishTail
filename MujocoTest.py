@@ -27,8 +27,8 @@ joint_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, joint_name)
 dof_adr=model.jnt_dofadr[joint_id]
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
-    while data.time< 5:
-        print("hello world")
+    while data.time< 2:
+        print(f"Time: {data.time: .2f}")
 
 """
 with mujoco.Renderer(model, 1600, 1600) as renderer:
