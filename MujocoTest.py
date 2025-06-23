@@ -35,7 +35,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         constraint_force = data.qfrc_constraint[dof_adr].copy
         force.append(constraint_force)
-        print("Force: {constraint_force}")
+        print("Force: f{constraint_force}")
 
 
 """
