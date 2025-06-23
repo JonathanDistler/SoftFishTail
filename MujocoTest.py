@@ -34,7 +34,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .2f}")
-        position=data.xpos[1].copy
+        position=data.xpos[1]
         print(f"Position: {position}")
         pos.append(position)
 
@@ -42,16 +42,3 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         force.append(constraint_force)
         #printing zero for constraint force. Could be an issue of not actually having a force. Or, of using the wrong object attribute
         print(f"Force: {constraint_force}")
-
-pos = np.array(pos)
-timeAxis = np.arange(pos.shape[0]) * dt
-
-### Plot Head X Position
-fig, ax = plt.subplots(figsize=(4, 3))
-ax.plot(timeAxis, pos[:, 2])
-ax.grid()
-ax.set_xlim(0, timeAxis[-1])
-ax.ticklabel_format(style="sci", axis='y', scilimits=(0,0))
-ax.set_xlabel("Time (s)")
-ax.set_ylabel("Position (m)")
-plt.close()
