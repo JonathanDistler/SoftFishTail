@@ -43,7 +43,7 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         #cfrc_ext
 
-        constraint_force = data.crfc_ext[dof_adr]
+        constraint_force = data.cfrc_ext[dof_adr]
         force.append(constraint_force)
         #it's not moving that much or generating a constraint force. . . might need to improve the damper and drive fish forward
         #in the simulation, the two aren't touching, so it makes since it isn't moving. . . Need to write a script to move the fish forward
