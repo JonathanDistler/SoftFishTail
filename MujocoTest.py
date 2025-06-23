@@ -2,32 +2,24 @@ import mujoco
 import mujoco.viewer
 import time
 
-model = mujoco.MjModel.from_xml_path(
-    r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\DistlerPractice.xml"
-)
-data = mujoco.MjData(model)
+pathXML="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\DistlerPractice.xml"
+model=mujoco.MjModel.from_xml_path(pathXML)
+data=mujoco.MjData(model)
 
-viewer = mujoco.viewer.MujocoViewer(model, data)  # Create viewer instance
+dt=model.opt.timestep
+frames=[]
+pos=[]
+force=[]
 
-joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, 'slider_joint')
+with mujoco.Renderer(model, 1600, 1600) as renderer:
+    while data.time< 5:
+        print(f"Time: {data.time:.2f}")
+        mujoco.mj_step(model,data)
 
-try:
-    while viewer.is_running():
+
+        pos.append(data.xpos[1].copy)
         dofadr = model.joint_dofadr[joint_id]
-        n_dof = model.joint_dofnum[joint_id]
         slider_force = data.qfrc_constraint[dofadr:dofadr + n_dof]
+        force.append(slider_force)
+        print("Force: {slider_force}")
 
-        if n_dof == 1:
-            print(f"Force exerted by slider joint: {slider_force[0]:.4f} N")
-        else:
-            print(f"Force exerted by slider joint (all DOFs): {slider_force}")
-
-        mujoco.mj_step(model, data)
-        viewer.render()
-        time.sleep(0.01)
-
-except KeyboardInterrupt:
-    print("\nCtrl+C detected, closing viewer...")
-
-finally:
-    viewer.close()
