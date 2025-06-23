@@ -25,12 +25,17 @@ dof_adr = model.jnt_dofadr[joint_id]
 joint_name="slider_joint"
 joint_id=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_JOINT, joint_name)
 dof_adr=model.jnt_dofadr[joint_id]
+constraint_force=0
 
 with mujoco.Renderer(model, 1600, 1600) as renderer:
     while data.time< 3:
         mujoco.mj_step(model, data)
         print(f"Time: {data.time: .5f}")
         pos.append(data.xpos[1].copy)
+
+        contraint_force=joint_id.efc_force
+        force.append(constraint_force)
+        print("Force: {constraint_force}")
 
 
 """
