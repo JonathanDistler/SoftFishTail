@@ -31,6 +31,7 @@ print(f"Slider Joint ID: {slider_joint_id}")
 # Lists to store data 
 force_vals = []
 positions = []
+time_vals=[]
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 3:
@@ -69,6 +70,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         print("Force acting on Fish Head (6 DOF):", force_fish_head)
         force_vals.append(force_fish_head)
+        time_vals.append(data.time)
 
         """"
         # Same for slider joint
@@ -90,3 +92,5 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         # Sleep for real-time pacing
         time.sleep(model.opt.timestep)
+
+#need to import matplotlib and graph the force-vals vs time (should be semi-linear)
