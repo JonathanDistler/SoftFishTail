@@ -2,6 +2,10 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 import time
+import matplotlib.pyplot as plt
+
+import sys
+print(sys.executable)
 
 # Path to XML file
 pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
@@ -105,3 +109,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         time.sleep(model.opt.timestep)
 
 #need to import matplotlib and graph the force-vals vs time (should be semi-linear)
+#need to make a filter that takes out too large of values 
+
+plt.plot(time_vals, force_vals)
+plt.show()
