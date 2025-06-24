@@ -52,7 +52,16 @@
                   rgba=".9 .9 .9 1" mass="0.1" />
             <site name="headLeft" pos="0.3 -0.24 0" size="0.02" rgba="0 255 0 1" />
             <site name="headRight" pos="0.3 0.24 0" size="0.02" rgba="0 255 0 1" />
-        </body>
+
+            <body pos="0.1655 0 0" name="motor">
+                <joint name="motor" type="hinge" axis="0 1 0" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
+                <geom name="motorShaft" type="box" pos="0 0 0" size="0.0075 0.06 0.0075" rgba=".1 .1 .1 1" mass="0.05" fluidshape="ellipsoid"/>
+                <geom name="motorArmLeft" type="box" pos="0 -0.055 -0.01975" size="0.0075 0.005 0.01975" rgba=".1 .1 .1 1" density="1250" fluidshape="ellipsoid"/>
+                <geom name="motorArmRight" type="box" pos="0 0.055 0.01975" size="0.0075 0.005 0.01975" rgba=".1 .1 .1 1" density="1250" fluidshape="ellipsoid"/>
+
+                <site name="bodyLeft" pos="0 -0.055 -0.0345" size="0.005" rgba=".9 .6 .5 .5"/>
+                <site name="bodyRight" pos="0 0.055 0.0345" size="0.005" rgba=".9 .6 .5 .5"/>
+            </body>
 
             <body pos="0.4 0 0">
                 <geom name="headJoint" type="cylinder" pos="0 0 0" size="0.04 0.14" rgba="255 0 0 .8" mass="0" />
@@ -120,6 +129,7 @@
                                         <geom name="tailRight" type="box" pos="0.1 0.002 0" size="0.01 0.002 0.02" rgba=".9 .9 .9 1" mass="0.1" />
                                         <site name="tailLeft" pos="0.1 -0.004 0" size="0.02" rgba="0 255 0 1" />
                                         <site name="tailRight" pos="0.1 0.004 0" size="0.02" rgba="0 255 0 1" />
+                                    </body>
                                 </body>
                             </body>
                         </body>
