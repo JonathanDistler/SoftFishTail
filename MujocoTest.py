@@ -4,9 +4,6 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 
-import sys
-print(sys.executable)
-
 # Path to XML file
 pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
 
@@ -28,9 +25,11 @@ fish_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, fish_joint_n
 # Initialize the simulation
 mujoco.mj_forward(model, data)
 
+'''
 print(f"Fish ID: {fish_body_id}")
 print(f"Slider ID: {slider_body_id}")
 print(f"Slider Joint ID: {slider_joint_id}")
+'''
 
 # Lists to store data 
 force_vals = []
@@ -108,8 +107,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # Sleep for real-time pacing
         time.sleep(model.opt.timestep)
 
-#need to import matplotlib and graph the force-vals vs time (should be semi-linear)
 #need to make a filter that takes out too large of values 
 
-plt.plot(time_vals, force_vals)
+#hard codes values on the same order of magnitude given some unintended rendering issues at the beginning
+plt.plot(time_vals[28:], force_vals[28:])
 plt.show()
