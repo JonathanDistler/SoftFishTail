@@ -39,9 +39,6 @@ positions=[]
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 3:
 
-        # Reset all applied forces before applying new ones
-        data.xfrc_applied[:] = 0
-
         # Force vector as (3,1) np.ndarray
         force = np.array([[10.0], [10.0], [10.0]])  
         torque = np.zeros((3,1))  
