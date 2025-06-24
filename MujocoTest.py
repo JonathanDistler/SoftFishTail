@@ -82,5 +82,8 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
         # Step the simulation forward
         mujoco.mj_step(model, data)
 
+        # Render one frame
+        mujoco.viewer.sync()
+
         #resets the forces back to zero 
         data.xfrc_applied[:] = 0
