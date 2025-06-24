@@ -1,6 +1,7 @@
 import mujoco
 import mujoco.viewer
 import numpy as np
+import time
 
 # Path to XML file
 pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
@@ -35,7 +36,7 @@ print(f"Slider Joint ID: {slider_joint_id}")
 force_vals=[]
 positions=[]
 
-with mujoco.Renderer(model, 1600, 1600) as renderer:
+with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 3:
 
         # Reset all applied forces before applying new ones
@@ -87,3 +88,5 @@ with mujoco.Renderer(model, 1600, 1600) as renderer:
 
         #resets the forces back to zero 
         data.xfrc_applied[:] = 0
+        timestep=.1
+        time.sleep(model.opt.timestep) 
