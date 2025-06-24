@@ -33,16 +33,16 @@
         <geom name="floor" pos="0 0 -0.5" size="0 0 1" type="plane" material="matplane" />
         <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1" />
 
-        <body name="slider_body" pos="-.01 0  .025">
-        <!-- Creates a slider joint with very high damping. Need to position it tangern to the fish, and then figure out how to report the N3 law pair acting on it-->
-            <joint name="slider_joint" type="slide" axis="1 0 0" damping="15.0"/>
-            <geom type="box" size="0.05 0.05 0.05" rgba="0 0 1 1"/>
+        <body name="slider_body" pos="-.35 0  0">
+        <!-- Creates a slider joint with very high damping. Need to position it tangent to the fish, and then figure out how to report the N3 law pair acting on it-->
+            <joint name="slider_joint" type="slide" axis="1 0 0" damping="10000.0"/>
+            <geom type="box" size=".3 .3 .3" rgba="0 0 1 1" contype="1" conaffinity="1" mass="1"/>
         </body>
 
-        <body pos="0 0 0"> 
+        <body pos="0 0 0" name="fish_head"> 
             <freejoint />
-           <geom name="headMesh" type="mesh" mesh="headMesh" pos=".1 .115 .15" quat="0 -0.7071 0.7071 0"
-              rgba=".9 .9 .5 1" mass=".1" fluidshape="ellipsoid"/>
+           <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".1 .115 .15" quat="0 -0.7071 0.7071 0"
+              rgba=".9 .9 .5 1" mass=".25" fluidshape="ellipsoid" contype="1" conaffinity="1"/>
             <!-- <geom name="head" type="box" pos="0 0 0 " rgba= ".9 .9 .9 1" size=" .1 .1 .1" mass=".25"/> -->
             <geom name="headSegment" type="box" pos="0.3 0 0" size="0.1 0.01 0.1"
                   rgba=".9 .9 .9 1" mass="0.1" />
@@ -52,9 +52,8 @@
                   rgba=".9 .9 .9 1" mass="0.1" />
             <site name="headLeft" pos="0.3 -0.24 0" size="0.02" rgba="0 255 0 1" />
             <site name="headRight" pos="0.3 0.24 0" size="0.02" rgba="0 255 0 1" />
+        </body>
 
-            <!-- Tail segments, changes size from .11 to .14-->
-            <!-- changes tail0 left and right geom-->
             <body pos="0.4 0 0">
                 <geom name="headJoint" type="cylinder" pos="0 0 0" size="0.04 0.14" rgba="255 0 0 .8" mass="0" />
                 <joint name="headJoint" />
@@ -121,7 +120,6 @@
                                         <geom name="tailRight" type="box" pos="0.1 0.002 0" size="0.01 0.002 0.02" rgba=".9 .9 .9 1" mass="0.1" />
                                         <site name="tailLeft" pos="0.1 -0.004 0" size="0.02" rgba="0 255 0 1" />
                                         <site name="tailRight" pos="0.1 0.004 0" size="0.02" rgba="0 255 0 1" />
-                                    </body>
                                 </body>
                             </body>
                         </body>
