@@ -35,7 +35,8 @@ time_vals=[]
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 3:
-
+        
+        #works on applying a force to the fish to propel it forward. In the simulation, this will be the thrust force of the tail
         # Zero out applied forces on joints before applying new ones
         data.qfrc_applied[:] = 0
 
@@ -54,6 +55,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # Note: qfrc_applied is 1D, flatten qfrc_target (which is nv x 1)
         data.qfrc_applied += qfrc_target.flatten()
 
+        #position and time of the fish 
         print(f"Time: {data.time:.2f}")
         print(f"Position of the Fish: {data.xpos[fish_body_id]}")
 
@@ -68,17 +70,26 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         #from F=M*A, and N3 law pair where all actions have opposite reactions. Mass of slider >> fish, therefore it is taken that it is pretty much a self-action
         force_fish_head = -1*data.qacc[qpos_adr : qpos_adr + 6]*fish_mass
 
+        """
         print("Force acting on Fish Head (6 DOF):", force_fish_head)
         force_vals.append(force_fish_head)
         time_vals.append(data.time)
-
-        """"
-        # Same for slider joint
-        qpos_adr_slider = model.jnt_qposadr[slider_joint_id]
-        slider_mass = 100.0
-        force_slider = data.qacc[qpos_adr_slider : qpos_adr_slider + 6] *slider_mass
-        print("Force acting on Fish Head (6 DOF):", force_slider)
         """
+
+        qpos_adr_slider = model.jnt_qposadr[slider_body_id]
+        slider_mass = 100.0 #from DistlerPractice, have to hardcode it 
+        force_slider = data.qacc[qpos_adr_slider : qpos_adr_slider + 6] *slider_mass #from F=M*A, with the only forces being the force applied by the fish via thrust
+        '''
+        print("Force acting on Fish Head (6 DOF):", force_slider)
+        '''
+
+        x_force=force_slider[0] #component in the direction of thrust (only the 1st axis)
+        print("Force:",x_force)
+
+        #adds to arrays, in order to graph 
+        force_vals.append(x_force)
+        time_vals.append(data.time)
+
 
         # Step the simulation forward
         mujoco.mj_step(model, data)

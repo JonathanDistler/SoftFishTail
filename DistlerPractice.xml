@@ -35,7 +35,7 @@
 
         <body name="slider_body" pos="-.35 0  0">
         <!-- Creates a slider joint with very high damping. Need to position it tangent to the fish, and then figure out how to report the N3 law pair acting on it-->
-            <joint name="slider_joint" type="slide" axis="1 0 0" damping="10000.0"/>
+            <joint name="slider_joint" type="slide" axis="1 0 0" damping="0.0"/>
             <geom type="box" size=".3 .3 .3" rgba="0 0 1 1" contype="1" conaffinity="1" mass="100"/>
         </body>
 
