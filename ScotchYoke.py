@@ -3,7 +3,7 @@ import mujoco
 import mujoco.viewer
 
 # Path to MJCF XML file
-pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/ScotchYoke.xml"
+pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/ScotchYokeMotor.xml"
 
 # Load the MuJoCo model and data
 model = mujoco.MjModel.from_xml_path(pathXML)
