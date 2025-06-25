@@ -3,6 +3,8 @@ import mujoco.viewer
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+from sympy import symbols, Eq, solve
+import math
 
 # Path to XML file
 pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
@@ -25,11 +27,9 @@ fish_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, fish_joint_n
 # Initialize the simulation
 mujoco.mj_forward(model, data)
 
-'''
 print(f"Fish ID: {fish_body_id}")
 print(f"Slider ID: {slider_body_id}")
 print(f"Slider Joint ID: {slider_joint_id}")
-'''
 
 # Lists to store data 
 force_vals = []
@@ -81,16 +81,23 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         qpos_adr_slider = model.jnt_qposadr[slider_body_id]
         slider_mass = 100.0 #from DistlerPractice, have to hardcode it 
-        force_slider = data.qacc[qpos_adr_slider : qpos_adr_slider + 6] *slider_mass #from F=M*A, with the only forces being the force applied by the fish via thrust
+        slider_damping=1000 #from DistlerPractice, have to hardcode it 
+        slider_velo=data.qvel[qpos_adr_slider: qpos_adr_slider +6]
+        slider_accel=data.qacc[qpos_adr_slider : qpos_adr_slider + 6]
+        F=symbols("F")
+        equation=Eq(slider_mass*slider_accel[0]-slider_damping*slider_velo[0] + F,0)
+        Force_val=solve(equation,F)
+        Force_val=abs(Force_val[0])
+        #force_slider = data.qacc[qpos_adr_slider : qpos_adr_slider + 6] *slider_mass #from F=M*A, with the only forces being the force applied by the fish via thrust
         '''
         print("Force acting on Fish Head (6 DOF):", force_slider)
         '''
 
-        x_force=force_slider[0] #component in the direction of thrust (only the 1st axis)
-        print("Force:",x_force)
+        #x_force=force_slider[0] #component in the direction of thrust (only the 1st axis)
+        print("Force:",Force_val)
 
         #adds to arrays, in order to graph 
-        force_vals.append(x_force)
+        force_vals.append(Force_val)
         time_vals.append(data.time)
 
 
@@ -107,8 +114,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # Sleep for real-time pacing
         time.sleep(model.opt.timestep)
 
+#need to import matplotlib and graph the force-vals vs time (should be semi-linear)
 #need to make a filter that takes out too large of values 
 
-#hard codes values on the same order of magnitude given some unintended rendering issues at the beginning
-plt.plot(time_vals[28:], force_vals[28:])
+plt.plot(time_vals[17:], force_vals[17:])
 plt.show()
