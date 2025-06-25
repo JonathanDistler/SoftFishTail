@@ -118,13 +118,41 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # Sleep for real-time pacing
         time.sleep(model.opt.timestep)
 
-#need to import matplotlib and graph the force-vals vs time (should be semi-linear)
-#need to make a filter that takes out too large of values 
+#adds a filter where inputs that removes force-values above the mean (given the artificially high mean)
+num_vals=len(force_vals)
+total_force=0
+for i in range(num_vals):
+    total_force+=force_vals[i]
+mean=total_force/num_vals
+
+sdev_val=0
+for i in range(num_vals):
+    sdev_val+=(force_vals[i]-mean)**2
+sdev=math.sqrt(1/(num_vals-1)*sdev_val)
+
+time_update=[]
+force_update=[]
+for i in range(num_vals):
+    z_score=(force_vals[i]-mean)/sdev
+    if (z_score<=0 and z_score>=-3):
+        time_update.append(time_vals[i])
+        force_update.append(force_vals[i])
+'''
 # Plot Force vs. Time
 plt.figure()
 plt.plot(time_vals, force_vals, label="Force")
 plt.xlabel("Time (s)")
-plt.ylabel("Force e1-Direction (N)")
+plt.ylabel("Force e1-Direction (N) ")
+plt.title("Time vs. Force")
+plt.grid(True)
+plt.legend()
+plt.show(block=False)  # Non-blocking show
+'''
+#plot force vs. time with z-score filter
+plt.figure()
+plt.plot(time_update, force_update, label="Force")
+plt.xlabel("Time (s)")
+plt.ylabel("Force e1-Direction (N) ")
 plt.title("Time vs. Force")
 plt.grid(True)
 plt.legend()
