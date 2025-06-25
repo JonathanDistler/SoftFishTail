@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 from sympy import symbols, Eq, solve
 import math
 
+# Close any existing figures when script starts
+plt.close('all')
+
 # Path to XML file
 pathXML = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/DistlerPractice.xml"
 
@@ -62,7 +65,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         print(f"Time: {data.time:.2f}")
         print(f"Position of the Fish: {data.xpos[fish_body_id]}")
 
-        positions.append(data.xpos[fish_body_id])
+        position_vals=(data.xpos[fish_body_id])
+        positions.append(position_vals[0])
 
         # Get joint position address (index in qpos) of fish_joint
         qpos_adr = model.jnt_qposadr[fish_joint_id]
@@ -116,6 +120,25 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
 #need to import matplotlib and graph the force-vals vs time (should be semi-linear)
 #need to make a filter that takes out too large of values 
+# Plot Force vs. Time
+plt.figure()
+plt.plot(time_vals, force_vals, label="Force")
+plt.xlabel("Time (s)")
+plt.ylabel("Force e1-Direction (N)")
+plt.title("Time vs. Force")
+plt.grid(True)
+plt.legend()
+plt.show(block=False)  # Non-blocking show
 
-plt.plot(time_vals[17:], force_vals[17:])
-plt.show()
+# Plot Position vs. Time
+plt.figure()
+plt.plot(time_vals, positions, label="Position")
+plt.xlabel("Time (s)")
+plt.ylabel("Position e1-Direction (m)")
+plt.title("Time vs. Position")
+plt.grid(True)
+plt.legend()
+plt.show(block=False)
+plt.pause(10)  # Keeps plot open for 10 seconds
+
+
