@@ -1,6 +1,5 @@
-<!-- Uses preexisting tendonfishsimple model to develop a new fish issues come from not being able to rotate the meshes appropriately-->
-<!-- Try to figure out how to get the meshes, add a motor? (look at Mike's docs), then also mess around with some of the weight parametersand some of the string setups-->
-<!--differes from  Mujoco in the mass and damping coefficients-->
+<!-- Uses preexisting tendonfishsimple model to develop a new fish. Issues come from not being able to rotate the meshes appropriately-->
+<!--differes from  Mujoco in the mass and damping coefficients, used in MujocoTest.py file -->
 <mujoco model="tendonFish">
     <option integrator="implicitfast" timestep="0.01" iterations="50" solver="Newton"
             tolerance="1e-10" gravity="0 0 0" density="1000" viscosity="0.001"/>

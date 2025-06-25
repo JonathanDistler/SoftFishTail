@@ -1,3 +1,5 @@
+<!--Uses the scotch yoke model built in ScotchYoke and adds it into a prexisting fish (MujocoFishMotor)-->
+<!--Mostly done for looks. Physics isn't great on it yet, need to workout the masses to avoid unintentional movement with scotch yoke pattern-->
 <mujoco model="tendonFish">
     <option integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-10" gravity="0 0 0" density="800" viscosity="0.001"/>
     

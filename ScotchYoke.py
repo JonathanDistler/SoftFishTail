@@ -1,3 +1,6 @@
+#script that drives a scotch, which is constrained to move with a yoke. 
+#pretty much a standalone project, however, it could be integrated with MujocoTest for a "sexier" test environment, along with the 
+#ScotchYokeMotor fish
 import numpy as np
 import mujoco
 import mujoco.viewer

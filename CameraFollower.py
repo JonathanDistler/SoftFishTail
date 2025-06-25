@@ -1,3 +1,4 @@
+#script that moves the camera to follow  the motor body embedded in the fish
 import mujoco.viewer
 import mujoco
 import time

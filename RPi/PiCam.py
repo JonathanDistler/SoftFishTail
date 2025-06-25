@@ -1,3 +1,5 @@
+#starts and operates a pi camera
+#will eventually be used for a CV Project
 from picamera2 import Picamera2
 from time import sleep
 import os

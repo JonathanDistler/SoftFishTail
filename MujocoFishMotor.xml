@@ -1,3 +1,5 @@
+<!-- Model that integrates an oscillating slider joint that can drive the tail-->
+<!-- Used for manual testing, doesn't work very well in the ScotchYoke Test-->
 <mujoco model="tendonFish">
     <option integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-10" gravity="0 0 0" density="800" viscosity="0.001"/>
     

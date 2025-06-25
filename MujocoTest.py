@@ -1,3 +1,5 @@
+#Test that is intended to measure the force output of the fish thrust. Uses a constant force against the fish to simulate thrust. 
+#Works along with DistlerPractice. Could also be compattible with Mujoco.xml, but would need to change the path
 import mujoco
 import mujoco.viewer
 import numpy as np

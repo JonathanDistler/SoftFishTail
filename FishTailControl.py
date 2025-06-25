@@ -1,5 +1,5 @@
 #controls the output of the tail with the MujocoFishMotor.xml file. The radius depends on the damping and stiffness of the tail 
-#runs with OptimizedMujocoFishMotor
+#runs with OptimizedMujocoFishMotor, working on transitioning from changing position to slider control 
 import mujoco
 import mujoco.viewer
 import numpy as np
