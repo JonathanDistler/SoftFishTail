@@ -1,0 +1,72 @@
+<!-- Uses preexisting tendonfishsimple model to develop a new fish issues come from not being able to rotate the meshes appropriately-->
+<!-- Try to figure out how to get the meshes, add a motor? (look at Mike's docs), then also mess around with some of the weight parametersand some of the string setups-->
+<mujoco model="tendonFish">
+    <option integrator="implicitfast" timestep="0.01" iterations="50" solver="Newton"
+            tolerance="1e-10" gravity="0 0 0" density="1000" viscosity="0.001"/>
+
+
+    <visual>
+        <global offheight="2160" offwidth="3840" />
+        <rgba haze=".3 .3 .3 1" />
+    </visual>
+
+    <!-- Environment parameters -->
+    <asset>
+        <!-- <mesh name="tailMesh" file="mujoco-3.3.2-windows-x86_64/model/mesh/tailV1.STL" scale="0.0025 0.0025 0.0025" /> -->
+        <mesh name="tailMesh" file="mujoco-3.3.2-windows-x86_64/model/mesh/UpdatedTail.STL" scale="0.0045 0.0045 0.0065" />
+        <mesh name="headMesh" file="mujoco-3.3.2-windows-x86_64/model/mesh/FishNose.STL" scale="0.0045 0.0045 0.0065" />
+        <mesh name="Yoke" file="mujoco-3.3.2-windows-x86_64\model\mesh\Yoke (stl).stl" scale=" .01 .02 .01" />
+        <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512" />
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".25 .25 .25" rgb2=".3 .3 .3"
+                 width="512" height="512" mark="cross" markrgb=".8 .8 .8" />
+        <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true" />
+    </asset>
+
+    <default>
+        <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="10" damping="0.1" />
+    </default>
+
+    <!-- World body and fish structure -->
+    <worldbody>
+        <camera name="fixed" pos="0.4 -1.2 1.2" xyaxes="1 0 0 0 1 1" />
+        <camera name="fixedTop" pos="-0.75 0 1.5" xyaxes="0 -1 0 1 0 0.75" />
+        <camera name="fixedDiag" pos="2.5 -4.0 4.0" xyaxes="0.8 0.6 0 -0.4 0.5 0.75" />
+        <geom name="floor" pos="0 0 -0.5" size="0 0 1" type="plane" material="matplane" />
+        <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1" />
+
+        <body name="cam" pos="0 0 0">
+            <!-- hinge joint allows free rotation -->
+            <joint name="Rotor" type="hinge" axis="0 0 1" limited="false" stiffness="300" damping="800"/>
+    
+            <!-- cylinder base -->
+            <geom type="cylinder" size=".3 .05" rgba="0 0 1 1" contype="1" conaffinity="1" mass="100" />
+
+            <!-- Yoke mesh attached to cam -->
+            <geom name="YokeMesh" type="mesh" mesh="Yoke" pos="0 0 .05" 
+            rgba=".9 .9 .5 1" mass=".25" 
+            quat="0.707106781187 0.707106781187 0 0" 
+            fluidshape="ellipsoid" contype="1" conaffinity="1"/>
+        </body>
+
+        <!-- motor body nested inside -->
+        <body name="motorBody" pos="0 0 .12" quat="0.7071 0 0 -0.7071">
+            <joint name="motor_slide" type="slide" axis="0 1 0" limited="true" range="-0.02 0.02" stiffness="1000" damping="1000"/>
+            <geom name="motorSlide" type="box" pos="0 0 0" size="0.02 0.25 0.01" rgba="1 1 1 1" density="125"/>
+            <site name="bodyLeft" pos=".01 0 0" size="0.005" rgba=".9 .6 .5 .5"/>
+        </body>
+
+
+    </worldbody>
+
+    <!-- parameters to make couple the two -->
+    <equality>
+        <joint name="rotor_to_slide" joint1="motor_slide" joint2="Rotor" polycoef="0 -3.1831"/>
+    </equality>
+
+    <!-- defines both actuators, with -180-180 range meaning the angel of rotation for the motor-->
+    <actuator>
+        <velocity name="motorRotation" joint="Rotor" kv="100" ctrllimited="true" ctrlrange="-180 180" forcerange="-5000 5000"/>
+        <velocity name="yokeDriver" joint="motor_slide" kv="100" ctrllimited="true" ctrlrange="-10 10" forcerange="-500 500"/>
+    </actuator>
+
+</mujoco>
