@@ -19,8 +19,8 @@
         <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="10 10" texuniform="true"/>
         <mesh name="finTop" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\finTop.obj"/>
         <mesh name="finTail" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\finTail.obj"/>
-        <mesh name="tailMesh" file="mujoco-3.3.2-windows-x86_64/model/mesh/UpdatedTail.STL" scale="0.0025 0.0025 0.0045" />
-        <mesh name="headMesh" file="mujoco-3.3.2-windows-x86_64/model/mesh/FishNose.STL" scale="0.0015 0.0015 0.0025" />
+        <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\UpdatedTail.STL" scale="0.0025 0.0025 0.0045" />
+        <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\FishNose.STL" scale="0.0015 0.0015 0.0025" />
 
         <material name="acrylic" rgba=".9 .9 .9 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
@@ -58,7 +58,7 @@
         <body pos=".35 0 0">
             <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0"/>
             <!--<joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>-->
-            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="100" damping="10"/> 
+            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="1000" damping="100" range="-.02 .02"/> 
 
             <joint name="headRollX" type="hinge" pos="0.02432519 0 0.00306519" axis="1 0 0" range="-180 180" stiffness="10" damping="1"/>
             <joint name="headRollY" type="hinge" pos="0.02432519 0 0.00306519" axis="0 1 0" range="-180 180" stiffness="10" damping="1"/>
