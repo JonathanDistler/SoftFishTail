@@ -23,7 +23,7 @@ motor_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, motor_body)
 actuator_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, motor_body)
 
 
-print(f"Fish ID: {motor_body_id}")
+#print(f"Fish ID: {motor_body_id}")
 
 # Lists to store data 
 force_vals = []
