@@ -50,6 +50,9 @@ while data.time < 3:
     # Step simulation forward
     mujoco.mj_step(model, data)
 
+    # Step simulation forward
+    mujoco.mj_step(model, data)
+
     # Collect position and force data
     pos = data.xpos[motor_body_id]
     force_val = data.sensor("force").data  # Adjust sensor name if needed
