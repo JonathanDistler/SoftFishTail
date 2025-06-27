@@ -54,11 +54,11 @@
             <site name="ft_sensor" pos="0 0 0" rgba="1 0 0 0.3" size=".3 .3 .3" type="box"/> 
         </body>
 
-
+        
         <body pos=".35 0 0">
             <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0"/>
-            <joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>
-            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="100" damping="10"/>
+            <!--<joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>-->
+            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="100" damping="10"/> 
 
             <joint name="headRollX" type="hinge" pos="0.02432519 0 0.00306519" axis="1 0 0" range="-180 180" stiffness="10" damping="1"/>
             <joint name="headRollY" type="hinge" pos="0.02432519 0 0.00306519" axis="0 1 0" range="-180 180" stiffness="10" damping="1"/>
