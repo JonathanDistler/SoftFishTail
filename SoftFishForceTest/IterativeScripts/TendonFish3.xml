@@ -1,7 +1,8 @@
 <!--Creates a tendon fish based on Mike Yan Michelis' design. Adds a contact set between the head and the sliding block-->
 <!-- Measures the force of the fish (from the thrust of its tail) via the TendonFishForce.py script and the force sensor on the block-->
 <!--Future work could tweak parameters (ie masses and desnitities)-->
-<!--Same design as TendonFish.xml, however, a few parameters are tweaked (ie sliding joints on first few body sections), more damping, and lower motor controls, as well as z-height damping-->
+<!--This file has a looser damping ratio on the height, so it might oscillate more, however, it has overall better tail radius-->
+<!--Works along with TendonFishForce adn TendonFishForceVideo scripts-->
 
 <mujoco model="tendonFish">
     <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
@@ -20,7 +21,7 @@
         <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="10 10" texuniform="true"/>
         <mesh name="finTop" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\finTop.obj"/>
         <mesh name="finTail" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\finTail.obj"/>
-        <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\UpdatedTail.STL" scale="0.0025 0.0025 0.0045" />
+        <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\UpdatedTail.STL" scale="0.002 0.0025 0.0045" />
         <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\FishNose.STL" scale="0.0015 0.0015 0.0025" />
 
         <material name="acrylic" rgba=".9 .9 .9 0.2"/>
@@ -30,9 +31,9 @@
 
 
     <default>
-        <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-60 60" stiffness="20" damping="100"/>
+        <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="0.65" damping="0.0"/>
         <geom fluidcoef="0.1 0.1 0.1 2.0 1.0" condim="1"/>
-        <tendon width="0.001" rgba=".9 .6 .5 1" stiffness="20" damping="100"/>
+        <tendon width="0.001" rgba=".9 .6 .5 1" stiffness="20" damping="10"/>
     </default>
     
 
@@ -56,10 +57,10 @@
         </body>
 
         
-        <body pos=".15 0 0">
+        <body pos=".05 0 0">
             <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0"/>
             <!--<joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>-->
-            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1"  range="-.01 .01"/> 
+            <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1"  range="-.02 .02"/> 
 
             <joint name="headRollX" type="hinge" pos="0.02432519 0 0.00306519" axis="1 0 0" range="-180 180" stiffness="10" damping="1"/>
             <joint name="headRollY" type="hinge" pos="0.02432519 0 0.00306519" axis="0 1 0" range="-180 180" stiffness="10" damping="1"/>
@@ -109,8 +110,6 @@
                 <site name="tail0right" pos="0.019 0.045 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
                 <geom name="tail0-joint1" type="box" pos="0.02575 0 0" size="0.00375 0.0005 0.035" rgba=".9 .9 .9 1" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
-                
-                <joint name="tailDamper1" pos="0.0 0 0.0" type="slide" axis="1 0 0" damping="125"/>
 
                 <body pos="0.0295 0 0">
                     <geom name="joint1" type="cylinder" pos="0 0 0" size="0.002 0.0351" rgba=".6 .1 .1 1" mass="0" contype="0" conaffinity="0"/>
@@ -125,7 +124,7 @@
                     <site name="tail1right" pos="0.0195 0.035 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
                     <geom name="tail1-joint2" type="box" pos="0.02675 0 0" size="0.00425 0.0005 0.0325" rgba=".9 .9 .9 1" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
-                    <joint name="tailDamper2" pos="0.0 0 0.0" type="slide" axis="1 0 0" damping="50"/>
+                    <joint name="tailZ1" pos="0.0 0 0.0" type="slide" axis="0 0 1" stiffness="1" damping="40" range="-.075 .075"/>
 
 
                     <body pos="0.031 0 0">
@@ -142,7 +141,7 @@
 
                         <geom name="tail2-joint3" type="box" pos="0.027 0 0" size="0.0035 0.0005 0.03" rgba=".9 .9 .9 1" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
 
-                        <joint name="tailDamper3" pos="0.0 0 0.0" type="slide" axis="1 0 0" damping="50"/>
+                        <joint name="tailZ2" pos="0.0 0 0.0" type="slide" axis="0 0 1" stiffness="1" damping="40" range="-.075 .075"/>
 
                         <body pos="0.0305 0 0">
                             <geom name="joint3" type="cylinder" pos="0 0 0" size="0.002 0.0301" rgba=".9 .2 .2 1" mass="0" contype="0" conaffinity="0"/>
@@ -157,8 +156,7 @@
                             <site name="tail3right" pos="0.019 0.015 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
                             <geom name="tail3-joint4" type="box" pos="0.0235 0 0" size="0.0015 0.0005 0.0275" rgba=".9 .9 .9 1" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
-
-                            <joint name="tailDamper4" pos="0.0 0 0.0" type="slide" axis="0 0 1" damping="50"/>
+                            <joint name="tailZ3" pos="0.0 0 0.0" type="slide" axis="0 0 1" stiffness="1" damping="40" range="-.075 .075"/>
 
                             <body pos="0.024999999999999998 0 0">
                                 <geom name="joint4" type="cylinder" pos="0 0 0" size="0.0025 0.0276" rgba=".9 .2 .2 1" mass="0" contype="0" conaffinity="0"/>
@@ -172,7 +170,7 @@
                                 <site name="tail4left" pos="0.015 -0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
                                 <site name="tail4right" pos="0.015 0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
-                                <joint name="tailDamper5" pos="0.0 0 0.0" type="slide" axis="0 0 1" damping="50"/>
+                                <joint name="tailZ4" pos="0.0 0 0.0" type="slide" axis="0 0 1" stiffness="1" damping="40" range="-.075 .075"/>
 
                                 <body pos="0.02 0 0">
                                     <geom name="joint5" type="cylinder" pos="0 0 0" size="0.00175 0.0276" rgba=".9 .2 .2 1" mass="0" contype="0" conaffinity="0"/>
@@ -185,11 +183,9 @@
                                     <geom name="tail5right" type="box" pos="0.011 0.00075 0" size="0.003 0.00425 0.007" rgba=".5 .7 .9 1" density="1250" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
                                     <site name="tail5left" pos="0.011 -0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
                                     <site name="tail5right" pos="0.011 0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
-                                    
-                                    <joint name="tailDamper6" pos="0.0 0 0.0" type="slide" axis="0 0 1" damping="50"/>
 
                                 <!-- Tail Fin -->
-                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos=".025 .0085 -.05" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.005" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos=".025 .0085 -.05" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
                                 <!--<geom name="finTail" type="mesh" mesh="finTail" pos="0.015999999999999997 0 0" rgba=".9 .2 .2 0.7" mass="0.01" fluidshape="ellipsoid"/>-->
                                 <site name="marker10" pos="0.025 .0085 -0.5" size="0.005" material="marker"/>
 
@@ -227,7 +223,7 @@
 
     <actuator>
         <!-- <position name="motor" joint="motor" kp="1000" kv="10" ctrllimited="true" ctrlrange="-inf inf" forcerange="-100 100"/> -->
-        <velocity name="motor" joint="motor" kv="100" ctrllimited="true" ctrlrange="-5 5" forcerange="-5 5"/>
+        <velocity name="motor" joint="motor" kv="100" ctrllimited="true" ctrlrange="-10 10" forcerange="-25 25"/>
     </actuator>
 
     <sensor>
