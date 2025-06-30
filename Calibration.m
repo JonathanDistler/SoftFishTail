@@ -44,6 +44,7 @@ cals=[cal_1,cal_2,cal_3];
 %uses polyfit to fit the lines in all instances (1st degree polynomial)
 slope_fit = polyfit(masses,cals,1);
 slope_val=slope_fit(1)
+force=slope_val*9.81 %takes the mass output and multiplies by the gravitational constant
 
 
 hold on 
