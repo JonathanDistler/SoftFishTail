@@ -71,7 +71,7 @@ the body, too. -->
             
             <geom name="head_mesh" type="mesh" mesh="headMesh" pos="0 -0.0385 -.07" size="0.077 0.0025 0.05" material="acrylic" density="118" fluidshape="ellipsoid"  quat="0.707106781187 0 0 0.707106781187" contype="1" conaffinity="1" />
             <geom name="headTopPlate" type="box" pos="0.01 0 0.0515" size="0.08 0.02 0.0015" rgba=".9 .9 .9 0" density="1180" contype="1" conaffinity="1"/>
-            <geom name="headTopElectric" type="box" pos="0.005 0 0.083" size="0.06 0.04 0.03" rgba=".9 .9 .2 0." mass="0.53" contype="1" conaffinity="1"/>
+            <!--<geom name="headTopElectric" type="box" pos="0.005 0 0.083" size="0.06 0.04 0.03" rgba=".9 .9 .2 0." mass="0.53" contype="1" conaffinity="1"/>-->
             <geom name="headAttachment" type="box" pos="0.1 0 0" size="0.023 0.015 0.05" rgba=".1 .1 .1 1" mass="0.08" fluidshape="ellipsoid" contype="1" conaffinity="1"/>
 
             <geom name="body" type="box" pos="0.2005 0 0" size="0.0775 0.01 0.0525" material="alu" mass="0.6" fluidshape="ellipsoid" />
