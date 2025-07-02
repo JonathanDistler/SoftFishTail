@@ -23,9 +23,8 @@
  
 */
 
-/* Changes up the order of the readings and the pin order to get readings*/
 
-#define calibration_factor -3097100 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -2694000 //This value is obtained using the SparkFun_HX711_Calibration sketch
 
 #include "HX711.h"
 
@@ -46,9 +45,9 @@ void setup() {
 
 void loop() {
   Serial.print("Reading: ");
-  Serial.print(scale.get_units(), 1); //scale.get_units() returns a float
+  Serial.print(scale.get_units(), 4); //scale.get_units() returns a float
   Serial.println(" KG"); //You can change this to kg but you'll need to refactor the calibration_factor
-  Serial.print(scale.get_units()*9.8,1);
+  Serial.print(scale.get_units()*9.8,4);
   Serial.println(" N");
   Serial.println();
 }
