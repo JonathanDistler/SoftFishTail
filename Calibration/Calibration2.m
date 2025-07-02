@@ -18,21 +18,21 @@ mass_1_range=[-3347500,-2407500];
 
 %gives a linear interpolation to find the interpolated value for the
 %calibration value of the first mass 
-cal_1=mass_1_range(1)+((mass_1_range(2)-mass_1_range(1))/(x2_1-x1_1))*mass_1
+cal_1=mass_1_range(1)+((mass_1_range(2)-mass_1_range(1))/(x2_1-x1_1))(*mass_1-x1_1)
 
 mass_2=.411;
 x2_2=.5;
 x1_2=.4;
 mass_2_range=[-3177500,-2477500];
 
-cal_2=mass_2_range(1)+((mass_2_range(2)-mass_2_range(1))/(x2_2-x1_2))*mass_2
+cal_2=mass_2_range(1)+((mass_2_range(2)-mass_2_range(1))/(x2_2-x1_2))*(mass_2-x1_2)
 
 mass_3=.261;
 x2_3=.3;
 x1_3=.2;
 mass_3_range=[-6487500,-3897500];
 
-cal_3=mass_3_range(1)+((mass_3_range(2)-mass_3_range(1))/(x2_3-x1_3))*mass_3
+cal_3=mass_3_range(1)+((mass_3_range(2)-mass_3_range(1))/(x2_3-x1_3))*(mass_3-x1_3)
 
 
 
