@@ -1,0 +1,17 @@
+#This works with the ScaleReadingUpdate script to stream the data of the force output to the respective computer and save it in a CSV
+import serial
+import time
+ser = serial.Serial('COM9', 9600)  # COM 9 is hardcoded from my comptuer
+start=time.time()
+
+with open('force_readings.csv', 'w') as f:
+    f.write('Force_Newtons\n')  # CSV header
+    try:
+        while True:
+            time_val=time.time()-start
+            line = ser.readline().decode('utf-8', errors='ignore').strip()
+            print(line)
+            print(time_val)
+            f.write(f"Force: {line}, Time {time_val}" + "\n")
+    except KeyboardInterrupt:
+        print("Stopped by user")
