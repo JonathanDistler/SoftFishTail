@@ -1,7 +1,6 @@
 <!--Creates a tendon fish based on Mike Yan Michelis' design. Adds a contact set between the head and the sliding block-->
 <!-- Measures the force of the fish (from the thrust of its tail) via the TendonFishForce.py script and the force sensor on the block-->
-<!--Future work could further tweak parameters and optimize the distance between the parts like was the case on the actual fish-->
-<!--Adds the realistic CAD into the file-->
+<!--Future work could tweak parameters (ie masses and desnitities)-->
 
 <mujoco model="tendonFish">
     <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
@@ -30,7 +29,7 @@
     <default>
         <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="0.65" damping="0.0"/>
         <geom fluidcoef="0.1 0.1 0.1 2.0 1.0" condim="1"/>
-        <tendon width="0.001" rgba=".9 .6 .5 1" stiffness="600" damping="30"/>
+        <tendon width="0.001" rgba=".9 .6 .5 1" stiffness="650" damping="20"/>
     </default>
     
 
@@ -67,7 +66,7 @@
             <site name="COM" pos="0.02432519 0 0.00306519" size="0.02" material="marker"/>
 
             
-            <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".025 .105 .1" size="0.077 0.0025 0.05" material="acrylic" density="1250" quat="0 0 .7071 -.7071" fluidshape="ellipsoid"  contype="1" conaffinity="1"  />
+            <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".1 .105 .1" size="0.077 0.0025 0.05" material="acrylic" density="1300" quat="0 0 .7071 -.7071" fluidshape="ellipsoid"  contype="1" conaffinity="1"  />
     
 
             <site name="marker0" pos="-0.077 0 0.05" size="0.005" material="marker"/>
@@ -169,7 +168,7 @@
                                     <site name="tail5right" pos="0.011 0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
                                 <!-- Tail Fin -->
-                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 -.00310 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.01" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 -.00310 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.1" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
                                 <!--<geom name="finTail" type="mesh" mesh="finTail" pos="0.015999999999999997 0 0" rgba=".9 .2 .2 0.7" mass="0.01" fluidshape="ellipsoid"/>-->
                                 <site name="marker10" pos="0.025 .0085 -0.5" size="0.005" material="marker"/>
 
