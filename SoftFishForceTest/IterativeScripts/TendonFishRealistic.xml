@@ -29,7 +29,7 @@
     <default>
         <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="0.65" damping="0.0"/>
         <geom fluidcoef="0.1 0.1 0.1 2.0 1.0" condim="1"/>
-        <tendon width="0.001" rgba=".9 .6 .5 1" stiffness="650" damping="20"/>
+        <tendon width="0.005" rgba=".9 .6 .5 1" stiffness="600" damping="10"/>
     </default>
     
 
@@ -52,9 +52,9 @@
             <site name="ft_sensor" pos="0 0 0" rgba="1 0 0 0.3" size=".3 .3 .3" type="box"/> 
         </body>
 
-        
+        <!--adds a slider range to keep the fish always propogating forward from its original com like in the simulation-->
         <body pos=".35 0 0">
-            <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0"/>
+            <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-1 0.02432519"/>
             <!--<joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>
                 <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="1000" damping="100" range="-.02 .02"/> 
 
@@ -66,7 +66,7 @@
             <site name="COM" pos="0.02432519 0 0.00306519" size="0.02" material="marker"/>
 
             
-            <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".1 .105 .1" size="0.077 0.0025 0.05" material="acrylic" density="1300" quat="0 0 .7071 -.7071" fluidshape="ellipsoid"  contype="1" conaffinity="1"  />
+            <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".1 .105 .1" size="0.077 0.0025 0.05" material="acrylic" mass=".25" quat="0 0 .7071 -.7071" fluidshape="ellipsoid"  contype="1" conaffinity="1"  />
     
 
             <site name="marker0" pos="-0.077 0 0.05" size="0.005" material="marker"/>
@@ -168,7 +168,7 @@
                                     <site name="tail5right" pos="0.011 0.005 0" size="0.004" rgba=".9 .6 .5 .5"/>
 
                                 <!-- Tail Fin -->
-                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 -.00310 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.1" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 -.00310 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.15" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
                                 <!--<geom name="finTail" type="mesh" mesh="finTail" pos="0.015999999999999997 0 0" rgba=".9 .2 .2 0.7" mass="0.01" fluidshape="ellipsoid"/>-->
                                 <site name="marker10" pos="0.025 .0085 -0.5" size="0.005" material="marker"/>
 
@@ -193,7 +193,7 @@
             <site site="tail4right"/>
             <site site="tail5right"/>
         </spatial>
-        <spatial name="tendonRight">
+        <spatial name="tendonRight" >
             <site site="bodyRight"/>
             <site site="tail0right"/>
             <site site="tail1right"/>
@@ -206,7 +206,7 @@
 
     <actuator>
         <!-- <position name="motor" joint="motor" kp="1000" kv="10" ctrllimited="true" ctrlrange="-inf inf" forcerange="-100 100"/> -->
-        <velocity name="motor" joint="motor" kv="100" ctrllimited="true" ctrlrange="-10 10" forcerange="-25 25"/>
+        <velocity name="motor" joint="motor" kv="100" ctrllimited="true" ctrlrange="-20 20" forcerange="-25 25"/>
     </actuator>
 
 </mujoco>
