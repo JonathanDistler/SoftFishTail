@@ -91,15 +91,6 @@
                 <site name="bodyLeft" pos="0 -0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
                 <site name="bodyRight" pos="0 0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
             </body>
-
-            <!-- <body pos="20 3.25 75" name="motor">
-                <joint name="motor_rotate" type="hinge" axis="0 0 1" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
-                <geom name="motorSlider" type="cylinder" pos="0 0 0" size="3.5 5" rgba="0.59 0.8 1 .8" mass=".05" contype="1" conaffinity="1" />
-                <geom name="motorRods" type="box" pos="0 0 0" size="1.5 14 1.5" rgba="0.59 0.8 1 .8" mass=".05" contype="1" conaffinity="1" density="1250"/>
-                <site name="bodyLeft" pos="0 -14 1.5" size="3.75" rgba="0.031 0.509 0.96 .8"/>
-                <site name="bodyRight" pos="0 14 1.5" size="3.75" rgba="0.031 0.509 0.96 .8"/>
-            </body> -->
-           
             
             <!--center frame realistic mass should be around .2 kg , divided by 5 joints should be .04 kg per joint-->
             <body pos="0.28500000000000003 0 0">
