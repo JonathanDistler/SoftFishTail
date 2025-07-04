@@ -14,7 +14,8 @@ import cv2
 from datetime import datetime
 
 # Load model and data
-model = mujoco.MjModel.from_xml_path("C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Test9.xml")  
+#changes to FishTestSetup.xml, the relative pathway to the script
+model = mujoco.MjModel.from_xml_path("FishTestSetup.xml")  
 data = mujoco.MjData(model)
 
 # Get body and joint IDs
