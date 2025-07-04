@@ -23,6 +23,7 @@
         <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tailV2.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\headExternal.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="Tank" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\glassTank.STL" scale="0.0015 0.0015 0.0025" />
+        <mesh name="loadCell" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\loadCell.STL" scale="0.015 0.025 0.025" />
         <material name="acrylic" rgba="0.576470588235 0.694117647059 0.8 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
         <material name="marker" rgba=".9 .4 .1 .5"/>
@@ -49,11 +50,12 @@
         <geom name="ceiling" pos="0 0 0.2" size="0 0 1" zaxis="0 0 -1" type="plane" rgba=".7 .1 .1 0"/>
         <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
         
-        <!--creates a loadcell body-->
+        <!--creates a loadcell body and overlapping mesh-->
         <body name="slider_body" pos=".20 0 .45">
             <!--creates a geometry, not a joint, restricts all movement-->
             <geom type="box" size=".05 .05 .05" rgba="0 0 1 1" contype="1" mass=".1" conaffinity="1"/>
             <site name="ft_sensor" pos="0 0 0" rgba="1 1 1 1" size=".05 .05 .05" type="box" /> 
+            <geom name="loadingCell" type="mesh" mesh="loadCell" pos="-.34 -.055 -.05"/>
         </body>
 
         <body name="FishTank" pos="0 -.42 -.7">
@@ -82,11 +84,8 @@
                 <site name="ForceCOM" pos=" 0 0 -.2" size=".02" material="alu" />
                 <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="alu" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
                 <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="alu" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
+                <geom name="horizontalHinge" type="cylinder" pos=".035 0 .2" size=".055 .3" material="alu" mass="0"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
             </body>
-
-            <!--<body pos=".061 0 .25" name="aestheticBeam" >
-                <geom name="horizontalHinge" type="cylinder" pos=".05 0 .2" size=".055 .3" material="alu" mass="0"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
-            </body> -->
             
             
             <body pos="0.1655 0 0" name="motor" >
