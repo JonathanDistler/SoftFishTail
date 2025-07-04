@@ -1,8 +1,6 @@
 <!--Creates a tendon fish based on Mike Yan Michelis' design. Adds a contact set between the head and the sliding block-->
-<!-- Measures the force of the fish (from the thrust of its tail) via the TendonFishForce.py script and the force sensor on the block-->
-<!--Future work could tweak parameters (ie masses and desnitities)-->
-<!-- adds a real mass -->
-<!--Develops a seemingly 1:1 setup of what our real force test setup is-->
+<!-- Measures the force of the fish (from the thrust of its tail) via the FishTest.py script and the force sensor on the block-->
+<!-- adds a realistic mass value to the bodies-->
 
 <mujoco model="tendonFish">
     <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
@@ -15,13 +13,16 @@
         <rgba haze=".3 .3 .3 1"/>
     </visual>
 
+
+    <!--add a mesh that pivots like the actual fishtank setup-->
+    <!--imports meshes-->
     <asset>
         <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512"/>
         <texture name="texplane" type="2d" builtin="checker" rgb1=".15 .2 .35" rgb2=".2 .3 .45" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
         <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="10 10" texuniform="true"/>
         <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tailV2.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\headExternal.STL" scale="0.0015 0.0015 0.0025" />
-
+        <mesh name="Tank" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\glassTank.STL" scale="0.0015 0.0015 0.0025" />
         <material name="acrylic" rgba=".9 .9 .9 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
         <material name="marker" rgba=".9 .4 .1 .5"/>
@@ -32,7 +33,7 @@
     <default>
         <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="0.65" damping="0.0"/>
         <geom fluidcoef="0.1 0.1 0.1 2.0 1.0" condim="1"/>
-        <tendon width="0.005" rgba=".9 .6 .5 1" stiffness="600" damping="10"/>
+        <tendon width="0.005" rgba=".9 .6 .5 1" stiffness="60" damping="1"/>
     </default>
     
 
@@ -48,25 +49,21 @@
         <geom name="ceiling" pos="0 0 0.2" size="0 0 1" zaxis="0 0 -1" type="plane" rgba=".7 .1 .1 0"/>
         <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
         
+        <!--creates a loadcell body-->
         <body name="slider_body" pos=".20 0 .45">
-        <!-- Creates a slider joint with very high damping. Need to position it tangent to the fish, and then figure out how to report the N3 law pair acting on it-->
-            <joint name="slider_joint" type="slide" axis="1 0 0" damping="1000.0"/>
-            <geom type="box" size=".05 .05 .05" rgba="0 0 1 1" mass="1000" contype="1" conaffinity="1"/>
-            <site name="ft_sensor" pos="0 0 0" rgba="1 0 0 0.3" size=".03 .03 .03" type="box"/> 
+            <!--creates a geometry, not a joint, restricts all movement-->
+            <geom type="box" size=".05 .05 .05" rgba="0 0 1 1" contype="1" mass=".1" conaffinity="1"/>
+            <site name="ft_sensor" pos="0 0 0" rgba="1 1 1 1" size=".05 .05 .05" type="box" /> 
+        </body>
+
+        <body name="FishTank" pos="0 -.42 -.7">
+            <geom name="TankMesh" type="mesh" mesh="Tank" pos="0 0 0" mass="0" contype="0" conaffinity="0" rgba="0.160784313725 0.588235294118 1 0.1"/>
         </body>
 
         <!--adds a slider range to keep the fish always propogating forward from its original com like in the simulation-->
-        <!-- add a slider that keeps the head moving forward, delete the slider body/move it upwards-->
+        <!-- add a slider that keeps the head moving forward-->
         <body pos=".35 0 0">
-            <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-0.02432519 0.02432519"/>
-            <!--<joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0"/>
-                <joint name="headZ" pos="0.02432519 0 0.00306519" type="slide" axis="0 0 1" stiffness="1000" damping="100" range="-.02 .02"/> 
-
-                <joint name="headRollX" type="hinge" pos="0.02432519 0 0.00306519" axis="1 0 0" range="-180 180" stiffness="10" damping="1"/>
-                <joint name="headRollY" type="hinge" pos="0.02432519 0 0.00306519" axis="0 1 0" range="-180 180" stiffness="10" damping="1"/>
-                <joint name="headRollZ" type="hinge" pos="0.02432519 0 0.00306519" axis="0 0 1" range="-180 180" stiffness="0" damping="0"/>
-            -->
-            
+            <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-0.025669489880513867 0.003387345022720789"/>
             <site name="COM" pos="0.02432519 0 0.00306519" size="0.02" material="marker"/>
 
             <!-- realistic mass should be about .1 kg, had been .25 -->
@@ -78,11 +75,9 @@
             <site name="marker2" pos="0.1655 -0.0775 0.05" size="0.005" material="marker"/>
             <site name="marker3" pos="0.1655 0.0775 0.05" size="0.005" material="marker"/>
             <site name="bodyFin" pos="0.28 0 0.1" size="0.005" material="marker"/>
-
-
-            <!--need to write a python script that couplesthe hinge's movement with the fish's movement forward. So when the position is min x, it is backwards x degrees, and when it is at its forward most it is perpindicular range="-0.02432519 0.02432519"-->
-            <body pos=".05 0 .25" name="ForceAmp" >
-                <joint name="forceJoint" type="hinge" axis=" 0 1 0" pos="0 0 -.2" limited="false" stiffness="1000" damping="1000" />
+            <!--works with a python script that couplesthe hinge's movement with the fish's movement forward. So when the position is min x, it is backwards x degrees, and when it is at its forward most it is perpindicular range="-0.02432519 0.02432519"-->
+            <body pos=".061 0 .25" name="ForceAmp" >
+                <joint name="forceJoint" type="hinge" axis=" 0 1 0" pos="0 0 -.2" limited="true" stiffness="10000" damping="10000" range="-0.96 0"/>
                 <site name="ForceCOM" pos=" 0 0 -.2" size=".02" material="alu" />
                 <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="acrylic" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
                 <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="acrylic" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
@@ -189,7 +184,6 @@
 
                                 <!-- Tail Fin, realistic mass should be about .05 kg, was .15 kg -->
                                 <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 -.00310 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.05" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
-                                <!--<geom name="finTail" type="mesh" mesh="finTail" pos="0.015999999999999997 0 0" rgba=".9 .2 .2 0.7" mass="0.01" fluidshape="ellipsoid"/>-->
                                 <site name="marker10" pos="0.025 .0085 -0.5" size="0.005" material="marker"/>
 
                                 </body>
@@ -203,6 +197,7 @@
     
     </worldbody>
 
+    <!--tail organization-->
     <tendon>
         <spatial name="tendonLeft">
             <site site="bodyLeft"/>
@@ -223,10 +218,15 @@
             <site site="tail5left"/>           
         </spatial>
     </tendon>
-    <!--changes force range to smaller output range-->
+
+    <!--creates actuator to control motor and to couple the forceamplifier. Measures the force with a sensor-->
     <actuator>
-        <!-- <position name="motor" joint="motor" kp="1000" kv="10" ctrllimited="true" ctrlrange="-inf inf" forcerange="-100 100"/> -->
         <velocity name="motor" joint="motor_rotate" kv="100" ctrllimited="true" ctrlrange="-20 20" forcerange="-2.5 2.5"/>
+         <position name="force_actuator" joint="forceJoint" kp="500"/>
     </actuator>
+
+    <sensor>
+        <force name = "force" site="ft_sensor" />
+	</sensor>
 
 </mujoco>
