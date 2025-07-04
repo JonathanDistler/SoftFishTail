@@ -11,6 +11,7 @@ from sympy import symbols, Eq, solve
 import math
 import os
 import cv2
+from datetime import datetime
 
 # Load model and data
 model = mujoco.MjModel.from_xml_path("C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Test9.xml")  
@@ -39,7 +40,7 @@ positions = []
 time_vals=[]
 
 #motor speed 
-rate=10
+rate=20
 data.ctrl[actuator_id] = rate
 
 
@@ -49,11 +50,22 @@ renderer = mujoco.renderer.Renderer(model)
 frame_width = 640   # adjust if needed
 frame_height = 480  # adjust if needed
 fps = 60
+
+# Get current date and time
+current_datetime = datetime.now()
+
+# Format the date and time
+# Generate a timestamp without invalid characters
+formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+
 #video path, same as eventual graphs
-video_path=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Fish_Simulation_Output\fish_force_test_Distler.mp4"
+video_path=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/fish_force_test_Distler{formatted_datetime}.mp4"
 # Define OpenCV video writer
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or use 'XVID', 'avc1', etc.
 video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_height))
+
+
 
 #function that maps fish's position to the amplifier's angle
 def map_slider_to_hinge(slider_pos):
@@ -64,7 +76,7 @@ def map_slider_to_hinge(slider_pos):
     normalized = (slider_pos - slider_min) / (slider_max - slider_min)
 
     # Flip direction
-    hinge_angle = -55 * (1 - normalized)
+    hinge_angle = 55 * (1 - normalized)
 
     return hinge_angle  # in degrees
 # Run simulation
@@ -102,7 +114,7 @@ while data.time < 7:  # run for 7 seconds
     # Write frame to video
     video_writer.write(img_bgr)
     # Small sleep for pacing (optional)
-    time.sleep(.001)
+    time.sleep(.01)
 # Release video writer to finalize video file
 video_writer.release()
 print(f"Saved video to {video_path}")
@@ -113,7 +125,7 @@ output_dir = "Fish_Simulation_Output"
 os.makedirs(output_dir, exist_ok=True)
 
 # Save CSV file
-csv_filename = os.path.join(output_dir, "Force_Position_Data.csv")
+csv_filename = os.path.join(output_dir, f"Force_Position_Data{formatted_datetime}.csv")
 with open(csv_filename, mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Time (s)", "Force (N)", "Position (m)"])
@@ -121,7 +133,7 @@ with open(csv_filename, mode='w', newline='') as file:
 print(f"Data saved to {csv_filename}")
 
 # Save Force plot
-force_plot_path = os.path.join(output_dir, "Force_vs_Time.png")
+force_plot_path = os.path.join(output_dir, f"Force_vs_Time{formatted_datetime}.png")
 plt.figure()
 plt.plot(time_vals, force_vals, label="Force")
 plt.xlabel("Time (s)")
@@ -133,7 +145,7 @@ plt.savefig(force_plot_path)
 print(f"Force plot saved to {force_plot_path}")
 
 # Save Position plot
-position_plot_path = os.path.join(output_dir, "Position_vs_Time.png")
+position_plot_path = os.path.join(output_dir, f"Position_vs_Time{formatted_datetime}.png")
 plt.figure()
 plt.plot(time_vals, positions, label="Position")
 plt.xlabel("Time (s)")
