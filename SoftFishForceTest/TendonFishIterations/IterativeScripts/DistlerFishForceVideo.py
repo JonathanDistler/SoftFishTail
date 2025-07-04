@@ -80,7 +80,7 @@ while data.time < 3:
     time_vals.append(data.time)
     print("Time:",data.time)
 
-     # Update renderer scene and render image
+    # Update renderer scene and render image
     renderer.update_scene(data, camera="fixedDiag")
     img = renderer.render()
 

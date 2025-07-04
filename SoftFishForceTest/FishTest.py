@@ -1,0 +1,145 @@
+#Creates a python script that couples the fish's movement forward with the movement of a force-amplifier -analogous to the real-world testing.
+#When the position is at its minimum along the x it is upright, when it is is at its maximum it is at an arbitrary angle from upright
+#Works with FishTestSetup.xml
+import csv
+import mujoco
+import mujoco.viewer
+import numpy as np
+import time
+import matplotlib.pyplot as plt
+from sympy import symbols, Eq, solve
+import math
+import os
+import cv2
+
+# Load model and data
+model = mujoco.MjModel.from_xml_path("C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Test9.xml")  
+data = mujoco.MjData(model)
+
+# Get body and joint IDs
+motor_body="motor"
+com_body="COM"
+head_id="headX"
+force_id="force_actuator"
+
+motor_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, motor_body)
+actuator_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, motor_body)
+head_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, head_id)
+force_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, force_id)
+
+# Constants
+slider_min = -0.22728446327643137
+slider_max =  0.003387345022720789
+hinge_min_deg = 55  # Hinge backwards angle
+hinge_max_deg = 0   # Hinge upright angle
+
+# Lists to store data 
+force_vals = []
+positions = []
+time_vals=[]
+
+#motor speed 
+rate=10
+data.ctrl[actuator_id] = rate
+
+
+# Initialize the simulation
+# Initialize renderer once before loop
+renderer = mujoco.renderer.Renderer(model)
+frame_width = 640   # adjust if needed
+frame_height = 480  # adjust if needed
+fps = 60
+#video path, same as eventual graphs
+video_path=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Fish_Simulation_Output\fish_force_test_Distler.mp4"
+# Define OpenCV video writer
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or use 'XVID', 'avc1', etc.
+video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_height))
+
+#function that maps fish's position to the amplifier's angle
+def map_slider_to_hinge(slider_pos):
+    # Clip to slider range to avoid out-of-bounds
+    slider_pos = np.clip(slider_pos, slider_min, slider_max)
+
+    # Normalize
+    normalized = (slider_pos - slider_min) / (slider_max - slider_min)
+
+    # Flip direction
+    hinge_angle = -55 * (1 - normalized)
+
+    return hinge_angle  # in degrees
+# Run simulation
+while data.time < 7:  # run for 7 seconds
+
+    # Step simulation twice for 2x speed, just once now 
+    mujoco.mj_step(model, data)
+
+    #couples the head position with the force rod from actual testing, then maps to an angle
+    position=data.qpos[head_id]
+    angle = map_slider_to_hinge(position)
+    desired_angle_rad = np.deg2rad(angle)
+    data.ctrl[force_id] = desired_angle_rad
+    data.ctrl[actuator_id] = rate
+        
+
+    #measures time, force  and appends them to list
+    t = data.time
+    # Read force and position values
+    force_val = data.sensor("force").data
+    force_vals.append(force_val[0])
+    positions.append(position)
+    time_vals.append(t)
+    print(f"Time Vals:{t}, Force Vals: {force_val[0]}, Positions: {position}")
+
+    # Update renderer scene and render image
+    renderer.update_scene(data, camera="fixedDiag")
+    img = renderer.render()
+
+    # Convert from RGB (Mujoco) to BGR (OpenCV)
+    img_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    # Resize frame to match video size (if needed)
+    img_bgr = cv2.resize(img_bgr, (frame_width, frame_height))
+
+    # Write frame to video
+    video_writer.write(img_bgr)
+    # Small sleep for pacing (optional)
+    time.sleep(.001)
+# Release video writer to finalize video file
+video_writer.release()
+print(f"Saved video to {video_path}")
+
+
+#saves all into the directory
+output_dir = "Fish_Simulation_Output"
+os.makedirs(output_dir, exist_ok=True)
+
+# Save CSV file
+csv_filename = os.path.join(output_dir, "Force_Position_Data.csv")
+with open(csv_filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Time (s)", "Force (N)", "Position (m)"])
+    writer.writerows(zip(time_vals, force_vals, positions))
+print(f"Data saved to {csv_filename}")
+
+# Save Force plot
+force_plot_path = os.path.join(output_dir, "Force_vs_Time.png")
+plt.figure()
+plt.plot(time_vals, force_vals, label="Force")
+plt.xlabel("Time (s)")
+plt.ylabel("Force e1-Direction (N)")
+plt.title("Time vs. Force")
+plt.grid(True)
+plt.legend()
+plt.savefig(force_plot_path)
+print(f"Force plot saved to {force_plot_path}")
+
+# Save Position plot
+position_plot_path = os.path.join(output_dir, "Position_vs_Time.png")
+plt.figure()
+plt.plot(time_vals, positions, label="Position")
+plt.xlabel("Time (s)")
+plt.ylabel("Position e1-Direction (m)")
+plt.title("Time vs. Position")
+plt.grid(True)
+plt.legend()
+plt.savefig(position_plot_path)
+print(f"Position plot saved to {position_plot_path}")
