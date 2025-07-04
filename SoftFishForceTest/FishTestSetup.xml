@@ -23,7 +23,7 @@
         <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tailV2.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\headExternal.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="Tank" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\glassTank.STL" scale="0.0015 0.0015 0.0025" />
-        <material name="acrylic" rgba=".9 .9 .9 0.2"/>
+        <material name="acrylic" rgba="0.576470588235 0.694117647059 0.8 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
         <material name="marker" rgba=".9 .4 .1 .5"/>
     </asset>
@@ -75,15 +75,20 @@
             <site name="marker2" pos="0.1655 -0.0775 0.05" size="0.005" material="marker"/>
             <site name="marker3" pos="0.1655 0.0775 0.05" size="0.005" material="marker"/>
             <site name="bodyFin" pos="0.28 0 0.1" size="0.005" material="marker"/>
+
             <!--works with a python script that couplesthe hinge's movement with the fish's movement forward. So when the position is min x, it is backwards x degrees, and when it is at its forward most it is perpindicular range="-0.02432519 0.02432519"-->
             <body pos=".061 0 .25" name="ForceAmp" >
                 <joint name="forceJoint" type="hinge" axis=" 0 1 0" pos="0 0 -.2" limited="true" stiffness="10000" damping="10000" range="-0.96 0"/>
                 <site name="ForceCOM" pos=" 0 0 -.2" size=".02" material="alu" />
-                <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="acrylic" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
-                <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="acrylic" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
+                <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="alu" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
+                <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="alu" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
             </body>
 
-
+            <!--<body pos=".061 0 .25" name="aestheticBeam" >
+                <geom name="horizontalHinge" type="cylinder" pos=".05 0 .2" size=".055 .3" material="alu" mass="0"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
+            </body> -->
+            
+            
             <body pos="0.1655 0 0" name="motor" >
                 <joint name="motor_rotate" type="hinge" axis="0 0 1" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
                 <geom name="motorSlider" type="cylinder" pos="0 0 0" size="0.0075 0.006" rgba=".1 .1 .1 1" density="1250" fluidshape="ellipsoid"/>
@@ -91,6 +96,15 @@
                 <site name="bodyLeft" pos="0 -0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
                 <site name="bodyRight" pos="0 0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
             </body>
+
+            <!-- <body pos="20 3.25 75" name="motor">
+                <joint name="motor_rotate" type="hinge" axis="0 0 1" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
+                <geom name="motorSlider" type="cylinder" pos="0 0 0" size="3.5 5" rgba="0.59 0.8 1 .8" mass=".05" contype="1" conaffinity="1" />
+                <geom name="motorRods" type="box" pos="0 0 0" size="1.5 14 1.5" rgba="0.59 0.8 1 .8" mass=".05" contype="1" conaffinity="1" density="1250"/>
+                <site name="bodyLeft" pos="0 -14 1.5" size="3.75" rgba="0.031 0.509 0.96 .8"/>
+                <site name="bodyRight" pos="0 14 1.5" size="3.75" rgba="0.031 0.509 0.96 .8"/>
+            </body> -->
+           
             
             <!--center frame realistic mass should be around .2 kg , divided by 5 joints should be .04 kg per joint-->
             <body pos="0.28500000000000003 0 0">
