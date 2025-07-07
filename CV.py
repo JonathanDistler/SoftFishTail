@@ -24,6 +24,11 @@ from datetime import datetime
 import math
 import csv
 
+# Function to adjust contrast
+def adjust_contrast(frame, alpha, beta):
+    # alpha: Contrast control (1.0-3.0), beta: Brightness control (0-100)
+    return cv2.convertScaleAbs(frame, alpha=alpha, beta=beta)
+
 
 @click.command()
 @click.option(
@@ -117,6 +122,9 @@ def track_markers(
     framenum = 0
     while cap.isOpened():
         ret, frame = cap.read()
+        #higher brightness has been giving a better binding box
+        #higher contrast was poor for bounding box accuracy
+        frame=adjust_contrast(frame,1,75)
         framenum += 1
         print(framenum)
 
@@ -146,12 +154,21 @@ def track_markers(
         for box in bboxes_new:
             topleft = (int(box[0]), int(box[1]))
             botright = (int(box[0] + box[2]), int(box[1] + box[3]))
+
+            center_x_box = int(box[0] + box[2] / 2)
+            center_y_box = int(box[1] + box[3] / 2)
+            #draws rectangle based on corners
             cv2.rectangle(
                 frame, topleft, botright, color=(0, 0, 255), thickness=2
             )
 
-            delta_y=y_center-topleft[1] #should be the highest point on the rectangle minus the start y, accounts for top left being the 0.0 coordinate
-            delta_x=botright[0]-x_center #should be the furthest right point on the rectangle minus the start x
+            pts = np.array([[x_center, y_center], [center_x_box, center_y_box]], np.int32)
+            pts = pts.reshape((-1, 1, 2))  # Reshape to (n_points, 1, 2)
+            cv2.polylines(frame, [pts], isClosed=False, color=(0, 255, 255), thickness=2)
+
+            #computes math based on center point of the rectangle
+            delta_y=y_center-center_y_box #delta height from center rectangle to center frame
+            delta_x=center_x_box-x_center #delta width from center rectangle to center of frame
             angle=math.atan(delta_y/delta_x)
             angle=angle*180
             angle=angle/3.1415 #converts to degrees
@@ -194,3 +211,10 @@ def track_markers(
             writer.writerow([i, angle])
 if __name__ == "__main__":
     track_markers()
+
+
+#notes
+#could add a bounding box that follows the moving frame
+#could also use a different AI model that is better with movements
+#or. . . could slow down the video by 1/2 first, then double teh number of frames, so that it could treat it better 
+#could have higher fps to have better tracking
