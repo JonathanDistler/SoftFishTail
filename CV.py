@@ -21,6 +21,7 @@ import click
 import cv2
 import numpy as np
 from datetime import datetime
+import math
 
 
 @click.command()
@@ -51,16 +52,14 @@ def track_markers(
     """
     #video_1=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\20250704_140041.mp4"
     #video_2=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\20250704_140610.mp4"
-    #filepath="use the file that Matthew sent", should only need one bounding box, or maybe two (one for fish head, one for start)
-    #filepath=video_1
     #could work on hardcoding filepathinto code
-    #could work to change this from one rectangle to a line, then have a perpindicular line overtop, and compare the pixel distance (or some similar function) to determine the angle apart 
     folder = os.path.dirname(filepath)
     cap = cv2.VideoCapture(filepath)
 
     # Format the date and time
     # Generate a timestamp without invalid characters
     formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
 
     framenum = 0
     while cap.isOpened():
@@ -69,8 +68,15 @@ def track_markers(
         print(framenum)
         if framenum < start_frame:
             continue
-        #probably the area to mess around with and search for only 2 markers instead of the four, could try to do a diagonal rectangle and only
-        # Find bounding boxes
+
+        height, width = frame.shape[:2]
+        y_center = height // 2  # vertical center (y-coordinate)
+        x_center=width//2 #horizontal center (x-coordinate)
+
+        start_point = (0, y_center)  # left edge of screen
+        center_point = (width // 2, y_center)  # horizontal center of screen
+        end_point = (width - 1, y_center)  # right edge
+        #need a mount to hold the camera still, so the start position is maintained throughout the whole video
         bboxes = []
         for i in range(num_boxes):
             bboxes.append(cv2.selectROI(f"Select {i+1}-th Marker", frame))
@@ -104,12 +110,17 @@ def track_markers(
         (frame.shape[1], frame.shape[0]),
     )
 
+
     markers = []
     framenum = 0
     while cap.isOpened():
         ret, frame = cap.read()
         framenum += 1
         print(framenum)
+
+
+        # Draw white line, visual reference for center of the screen
+        cv2.line(frame, start_point, end_point, color=(255, 255, 255), thickness=1)
         if framenum < start_frame:
             continue
         if not ret or framenum > end_frame:
@@ -136,6 +147,13 @@ def track_markers(
             cv2.rectangle(
                 frame, topleft, botright, color=(0, 0, 255), thickness=2
             )
+
+            delta_y=y_center-topleft[1] #should be the highest point on the rectangle minus the start y, accounts for top left being the 0.0 coordinate
+            delta_x=botright[0]-x_center #should be the furthest right point on the rectangle minus the start x
+            angle=math.atan(delta_y/delta_x)
+            angle=angle*180
+            angle=angle/3.1415 #converts to degrees
+            print(angle)
 
         curr_markers = []
         # Compute relevant values of motion marker positions
