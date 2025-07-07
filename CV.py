@@ -22,6 +22,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 import math
+import csv
 
 
 @click.command()
@@ -62,6 +63,7 @@ def track_markers(
 
 
     framenum = 0
+    angles=[]
     while cap.isOpened():
         ret, frame = cap.read()
         framenum += 1
@@ -154,6 +156,7 @@ def track_markers(
             angle=angle*180
             angle=angle/3.1415 #converts to degrees
             print(angle)
+            angles.append(angle)
 
         curr_markers = []
         # Compute relevant values of motion marker positions
@@ -183,7 +186,11 @@ def track_markers(
     cv2.destroyAllWindows()
 
     np.savetxt(f"{folder}/markers.csv", markers, delimiter=",")
-
-
+    # Save angles with frame numbers
+    with open(f"{folder}/angles.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Frame", "Angle (degrees)"])
+        for i, angle in enumerate(angles, start=start_frame):
+            writer.writerow([i, angle])
 if __name__ == "__main__":
     track_markers()
