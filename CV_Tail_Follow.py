@@ -236,7 +236,7 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
         for framenum, total_angle_sum in all_abs_metrics:
             t=(1/fps)*framenum
             times.append(t)
-            writer.writerow([times, total_angle_sum])
+            writer.writerow([t, total_angle_sum])
             angles.append(total_angle_sum)
 
     #need to have a FPS to time conversion (camera should operate at 30 fps, then I can measure the frame number 1/30 )
