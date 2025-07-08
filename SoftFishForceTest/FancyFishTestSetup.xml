@@ -1,7 +1,6 @@
 <!--Creates a tendon fish based on Mike Yan Michelis' design. Adds a contact set between the head and the sliding block-->
 <!-- Measures the force of the fish (from the thrust of its tail) via the FishTest.py script and the force sensor on the block-->
 <!-- adds a realistic mass value to the bodies-->
-<!--adds onto FishTestSetup by wrapping the force sensor in a mesh and adding the more realistic pivoting horizontal beam-->
 
 <mujoco model="tendonFish">
     <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
@@ -41,9 +40,9 @@
 
     <worldbody>
         <camera name="fixed" pos="0.4 -1.2 1.2" xyaxes="1 0 0 0 1 1"/>
-        <camera name="fixedTop" pos="-0.75 0 1.5" xyaxes="0 -1 0 1 0 0.75"/>
-        <camera name="fixedDiag" pos="0.75 -1 1" xyaxes="0.8 0.6 0 -0.4 0.5 0.75"/>
-        <camera pos="0.625 -0.592 0.720" xyaxes="0.758 0.653 -0.000 -0.468 0.544 0.697"/>
+        <camera name="fixedTop" pos="-0.85 0 1.5" xyaxes="0 -1 0 1 0 0.75"/>
+        <camera name="fixedDiag" pos="1.2 -1.2 1.2" xyaxes="0.8 0.6 0 -0.4 0.5 0.75"/>
+        <camera pos="0.625 -0.842 0.620" xyaxes="0.758 0.653 -0.000 -0.468 0.544 0.697"/>
 
 
 
@@ -80,14 +79,20 @@
             <site name="bodyFin" pos="0.28 0 0.1" size="0.005" material="marker"/>
 
             <!--works with a python script that couplesthe hinge's movement with the fish's movement forward. So when the position is min x, it is backwards x degrees, and when it is at its forward most it is perpindicular range="-0.02432519 0.02432519"-->
-            <body pos=".061 0 .25" name="ForceAmp" >
-                <joint name="forceJoint" type="hinge" axis=" 0 1 0" pos="0 0 -.2" limited="true" stiffness="10000" damping="10000" range="-0.96 0"/>
-                <site name="ForceCOM" pos=" 0 0 -.2" size=".02" material="alu" />
-                <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="alu" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
-                <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="alu" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
-                <geom name="horizontalHinge" type="cylinder" pos=".035 0 .2" size=".055 .3" material="alu" mass="0"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
+            <!--had stifness of 10000 and damping of 10000-->
+            <!--had worked very well with s=10 and d=100-->
+            <!--adds a hinge to turn translation force into rotation -->
+            <body name="ForceAmp_Base" pos=".07 0 .30">
+                <geom name="horizontalHinge" type="cylinder" pos=".035 0 .2" size=".065 .3" material="alu" mass=".001"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
+                <joint name="hingeHorizontal" type="hinge" axis="0 1 0"/>
             </body>
-            
+
+            <body pos=".061 0 .225" name="ForceAmp" >
+                    <joint name="forceJoint" type="hinge" axis=" 0 1 0" pos="0 0 -.2" limited="true" stiffness="1" damping="10" range="-0.96 0"/>
+                    <site name="ForceCOM" pos=" 0 0 -.2" size=".02" material="alu" />
+                    <geom name="InitialHinge" type="cylinder" pos="0 0 0" size=".035 .2" material="alu" mass=".0005" fluidshape="ellipsoid" contype="1" conaffinity="1" />
+                    <geom name="sideHinge" type="cylinder" pos="-.05 0 .2" size=".035 .1" material="alu" mass=".00025" contype="1" conaffinity="1" quat=".7071 0 .7071 0" />
+            </body>
             
             <body pos="0.1655 0 0" name="motor" >
                 <joint name="motor_rotate" type="hinge" axis="0 0 1" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
