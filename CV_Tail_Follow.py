@@ -1,6 +1,7 @@
 # !/usr/bin/env python3
 #code almost entirely from Mike Yan Michelis
-#Develops code to measure angle between tail joint and head throughout many different frames 
+#Develops a process that follows n-number of tail segments and measures their distances relative to the head, as well as their distances
+#relative to eachother. Then, it computes their relative and absolute angles
 
 """Track bounding boxes within video.
 
@@ -86,8 +87,11 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
     cut_movie = cv2.VideoWriter(f"{folder}/cut_video.mp4", fourcc, fps, (frame.shape[1], frame.shape[0]))
     tracked_movie = cv2.VideoWriter(f"{folder}/tracked_video_{formatted_datetime}.mp4", fourcc, fps, (frame.shape[1], frame.shape[0]))
 
+    #arrays for the markers, the metrics of the tail segments relative to the head, tail segments relative to each other, and the total tail-segment data
     markers = []
     all_rel_metrics = []
+    all_rel_metrics_2=[]
+    all_abs_metrics=[]
     framenum = 0
 
     while cap.isOpened():
@@ -100,8 +104,10 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
         if framenum < start_frame:
             continue
         
-        #processes all of the images to make them easier to "read" for the CV algorithm
-        frame = adjust_contrast(frame, 1.0, 75)
+        #processes all of the images to make them easier to "read" for the CV algorithm, had been 1-75
+        alpha=1
+        beta=45
+        frame = adjust_contrast(frame, alpha, beta)
         cut_movie.write(frame)
 
         height, width = frame.shape[:2]
@@ -133,30 +139,45 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
         # Reference is head (last box in tail-to-head list)
         head_center = np.array(curr_markers[-1])
         rel_metrics = []
-
+        rel_metrics_2=[]
+        abs_metrics=[]
+        #measures angle, distance, etc. via the last rectangular object ('the head')
         for i in range(num_boxes - 1):
-            #could also measure dx as the difference between curr_markers[i][0] and curr_markers[i][1]
             pt = np.array(curr_markers[i])
             dx = pt[0] - head_center[0]
             dy = pt[1] - head_center[1]
             distance = np.sqrt(dx**2 + dy**2)
             angle = math.atan2(dy, dx) * 180 / np.pi
+            if (angle>0):
+                angle=angle-180
+            else:
+                angle=angle+180
             rel_metrics.append([framenum, i, dx, dy, distance, angle])
-
-        """
-        for i in range(num_boxes - 2):
-            #could also measure dx as the difference between curr_markers[i][0] and curr_markers[i][1]
+        #measures the angle, distance, etc. via the next rectangular object ('next tail segment')
+        total_angle_sum=0
+        for i in range(num_boxes - 1):
             pt_1 = np.array(curr_markers[i])
             pt_2=np.array(curr_markers[i+1])
-            dx = pt_1[0] - pt_2[0]
-            dy = pt_1[1] - pt_2[1]
+            #not dividing by 2, because unlike CV_test, the rectangles are drawn about their mid-point
+            dx = (pt_1[0] - pt_2[0])
+            dy = (pt_1[1] - pt_2[1])
             distance = np.sqrt(dx**2 + dy**2)
             angle = math.atan2(dy, dx) * 180 / np.pi
-            rel_metrics.append([framenum, i, dx, dy, distance, angle])
-        """
+            if (angle>0):
+                angle=angle-180
+            else:
+                angle=angle+180
+
+            total_angle_sum+=angle    
+
+            rel_metrics_2.append([framenum, i, dx, dy, distance, angle])
+        abs_metrics.append([framenum,total_angle_sum])
+
         #adds to a new array
         all_rel_metrics.extend(rel_metrics)
+        all_rel_metrics_2.extend(rel_metrics_2)
 
+        all_abs_metrics.extend(abs_metrics)
         tracked_movie.write(frame)
         cv2.imshow("Tracker (press Q to exit)", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -170,10 +191,39 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
 
     # Save marker positions
     np.savetxt(f"{folder}/markers.csv", markers, delimiter=",")
-    with open(f"{folder}/relative_metrics.csv", mode='w', newline='') as file:
+    with open(f"{folder}/TailSegments_to_HeadSegments_Metrics.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Frames","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,end_frame-start_frame,start_frame,end_frame,filepath,alpha,beta])
+
+        #adds real formatting for data
         writer.writerow(["Frame", "Box Index", "dx", "dy", "Distance", "Angle"])
         for entry in all_rel_metrics:
+            writer.writerow(entry)
+
+    #should format this better, then add a first row with the "meta" data and a second row with the cumulative data 
+    with open(f"{folder}/TailSegments_Relative_Metrics.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Frames","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,end_frame-start_frame,start_frame,end_frame,filepath,alpha,beta])
+
+        #adds real formatting for data
+        writer.writerow(["Frame", "Box Index", "dx (i+1 rel. i)", "dy (i+1 rel. i)", "Distance (i+1 rel. i)", "Angle (i+1 rel. i)"])
+        for entry in all_rel_metrics_2:
+            writer.writerow(entry)
+
+    #should format this better, then add a first row with the "meta" data and a second row with the cumulative data 
+    #add a cumulative sum on the oustide of the for-loop to measure the total angle 
+    with open(f"{folder}/Total_Angle_Metrics.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Frames","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,end_frame-start_frame,start_frame,end_frame,filepath,alpha,beta])
+
+        writer.writerow(["Frame", "Total Angle"])
+        for entry in all_abs_metrics:
             writer.writerow(entry)
 
 if __name__ == "__main__":
