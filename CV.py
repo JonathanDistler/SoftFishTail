@@ -1,7 +1,6 @@
 # !/usr/bin/env python3
 #code almost entirely from Mike Yan Michelis
-#Working on developing a function to compute the angle between the fish_head (first bounding box) and a stationary bounding box:
-#could work on making stationary bounding box permanent to the frame 
+#measures the angle between each rectangle bounding box and the center of the frame -only good for fixed framed videos
 
 """Track bounding boxes within video.
 
@@ -123,8 +122,10 @@ def track_markers(
     while cap.isOpened():
         ret, frame = cap.read()
         #higher brightness has been giving a better binding box
-        #higher contrast was poor for bounding box accuracy
-        frame=adjust_contrast(frame,1,75)
+        #higher contrast was poor for bounding box accuracy, had been 1, 75 for normal light, 1-40 for LED
+        alpha=1
+        beta=40
+        frame=adjust_contrast(frame,alpha,beta)
         framenum += 1
         print(framenum)
 
@@ -206,15 +207,12 @@ def track_markers(
     # Save angles with frame numbers
     with open(f"{folder}/angles.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Frames","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,end_frame-start_frame,start_frame,end_frame,filepath,alpha,beta])
+
         writer.writerow(["Frame", "Angle (degrees)"])
         for i, angle in enumerate(angles, start=start_frame):
             writer.writerow([i, angle])
 if __name__ == "__main__":
     track_markers()
-
-
-#notes
-#could add a bounding box that follows the moving frame
-#could also use a different AI model that is better with movements
-#or. . . could slow down the video by 1/2 first, then double teh number of frames, so that it could treat it better 
-#could have higher fps to have better tracking
