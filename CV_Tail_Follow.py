@@ -1,7 +1,7 @@
 # !/usr/bin/env python3
 #code almost entirely from Mike Yan Michelis
-#Develops a process that follows n-number of tail segments and measures their distances relative to the head, as well as their distances
-#relative to eachother. Then, it computes their relative and absolute angles
+#Working on developing a function to compute the angle between the fish_head (first bounding box) and a stationary bounding box:
+#could work on making stationary bounding box permanent to the frame 
 
 """Track bounding boxes within video.
 
@@ -23,6 +23,7 @@ import numpy as np
 from datetime import datetime
 import math
 import csv
+import matplotlib.pyplot as plt
 
 # Function to adjust contrast
 def adjust_contrast(frame, alpha, beta):
@@ -49,7 +50,8 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
     folder = os.path.dirname(filepath)
     cap = cv2.VideoCapture(filepath)
 
-    formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    #formatted datetime without the second
+    formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M")
     framenum = 0
     print("Select bounding boxes in TAIL-TO-HEAD order.")
     while cap.isOpened():
@@ -189,6 +191,67 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
     tracked_movie.release()
     cv2.destroyAllWindows()
 
+
+    fps=30 #from Matthew's phone information, this needs to be hardcoded in
+    #need to change up all of the loops to reference s instead of fps 
+    #need to figure out the math on the distance 
+    #framenum, i, dx, dy, distance, angle
+
+    np.savetxt(f"{folder}/markers.csv", markers, delimiter=",")
+    with open(f"{folder}/TailSegments_to_HeadSegments_Metrics.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Time","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,(end_frame-start_frame)*(1/fps),start_frame,end_frame,filepath,alpha,beta])
+
+        #adds real formatting for data
+        writer.writerow(["Time (s)", "Box Index", "dx", "dy", "Distance", "Angle"])
+        for framenum,i,dx,dy,distance,angle in all_rel_metrics:
+            t=(1/fps)*framenum
+            writer.writerow([t,i,dx,dy,distance,angle])
+
+    with open(f"{folder}/TailSegments_Relative_Metrics.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Time","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,(end_frame-start_frame)*(1/fps),start_frame,end_frame,filepath,alpha,beta])
+
+        #adds real formatting for data
+        writer.writerow(["Frame", "Box Index", "dx (i+1 rel. i)", "dy (i+1 rel. i)", "Distance (i+1 rel. i)", "Angle (i+1 rel. i)"])
+        for framenum,i,dx,dy,distance,angle in all_rel_metrics_2:
+            t=(1/fps)*framenum
+            writer.writerow([t,i,dx,dy,distance,angle])
+
+    times=[]
+    angles=[]
+
+    with open(f"{folder}/Total_Angle_Metrics.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        #adds meta data to the top of the CSV
+        writer.writerow(["Number of Boxes","Total Time","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,(end_frame-start_frame)*(1/fps),start_frame,end_frame,filepath,alpha,beta])
+
+        for framenum, total_angle_sum in all_abs_metrics:
+            writer.writerow([framenum, total_angle_sum])
+            t=(1/fps)*framenum
+            times.append(t)
+            angles.append(total_angle_sum)
+
+    #need to have a FPS to time conversion (camera should operate at 30 fps, then I can measure the frame number 1/30 )
+    # Save Position plot
+    position_plot_path = os.path.join(folder, f"Time_vs_Frame_{formatted_datetime}.png")
+    plt.figure()
+    plt.plot(times, angles, label="Position")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Angle Total")
+    plt.title("Time vs. Angle")
+    plt.grid(True)
+    plt.savefig(position_plot_path)
+    print(f"Position plot saved to {position_plot_path}")
+    plt.pause(10)  # Keeps plot open for 10 seconds
+
+    """
+    The following graphs are all referencing frame vs angle, etc.
     # Save marker positions
     np.savetxt(f"{folder}/markers.csv", markers, delimiter=",")
     with open(f"{folder}/TailSegments_to_HeadSegments_Metrics.csv", mode='w', newline='') as file:
@@ -216,15 +279,31 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
 
     #should format this better, then add a first row with the "meta" data and a second row with the cumulative data 
     #add a cumulative sum on the oustide of the for-loop to measure the total angle 
+    frames=[]
+    angles=[]
     with open(f"{folder}/Total_Angle_Metrics.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
         #adds meta data to the top of the CSV
         writer.writerow(["Number of Boxes","Total Frames","Start Frame","End Frame","Video Path","Alpha","Beta"])
         writer.writerow([num_boxes,end_frame-start_frame,start_frame,end_frame,filepath,alpha,beta])
 
-        writer.writerow(["Frame", "Total Angle"])
-        for entry in all_abs_metrics:
-            writer.writerow(entry)
+        for framenum, total_angle_sum in all_abs_metrics:
+            writer.writerow([framenum, total_angle_sum])
+            frames.append(framenum)
+            angles.append(total_angle_sum)
+
+    # Save Position plot
+    position_plot_path = os.path.join(folder, f"Angle_vs_Frame_{formatted_datetime}.png")
+    plt.figure()
+    plt.plot(frames, angles, label="Position")
+    plt.xlabel("Frames")
+    plt.ylabel("Angle Total")
+    plt.title("Frame vs. Angle")
+    plt.grid(True)
+    plt.savefig(position_plot_path)
+    print(f"Position plot saved to {position_plot_path}")
+    plt.pause(10)  # Keeps plot open for 10 seconds
+    """
 
 if __name__ == "__main__":
     track_markers()
