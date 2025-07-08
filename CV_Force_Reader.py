@@ -106,7 +106,7 @@ plt.plot(df_force_angle["Time (s)"], df_force_angle["Force-X (N)"], label="Force
 plt.plot(df_force_angle["Time (s)"], df_force_angle["Force-Y (N)"], label="Force-Y")  # second force component
 plt.xlabel("Time (s)")
 plt.ylabel("Force (N)")
-plt.title("Time vs. Force")
+plt.title("Time vs. Force Components in Direction of Fish's Tail Total Bend")
 plt.grid(True)
 plt.legend()  # shows labels for both lines
 plt.savefig(position_plot_path)
@@ -181,7 +181,7 @@ plt.plot(df_force_head["Time (s)"], df_force_head["Force-X (N)"], label="Force-X
 plt.plot(df_force_head["Time (s)"], df_force_head["Force-Y (N)"], label="Force-Y")  # second force component
 plt.xlabel("Time (s)")
 plt.ylabel("Force (N)")
-plt.title("Time vs. Force")
+plt.title("Time vs. Force Components in Direction of Fish's Head")
 plt.grid(True)
 plt.legend()  # shows labels for both lines
 plt.savefig(position_plot_path)
