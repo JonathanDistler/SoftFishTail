@@ -231,10 +231,12 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int, end_frame: in
         writer.writerow(["Number of Boxes","Total Time","Start Frame","End Frame","Video Path","Alpha","Beta"])
         writer.writerow([num_boxes,(end_frame-start_frame)*(1/fps),start_frame,end_frame,filepath,alpha,beta])
 
+        #adds real formatting for data
+        writer.writerow(["Time (s)", "Total Angle (deg)"])
         for framenum, total_angle_sum in all_abs_metrics:
-            writer.writerow([framenum, total_angle_sum])
             t=(1/fps)*framenum
             times.append(t)
+            writer.writerow([times, total_angle_sum])
             angles.append(total_angle_sum)
 
     #need to have a FPS to time conversion (camera should operate at 30 fps, then I can measure the frame number 1/30 )
