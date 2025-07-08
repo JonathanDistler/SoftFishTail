@@ -15,7 +15,7 @@ from datetime import datetime
 
 # Load model and data
 #changes to FishTestSetup.xml, the relative pathway to the script
-model = mujoco.MjModel.from_xml_path("FishTestSetup.xml")  
+model = mujoco.MjModel.from_xml_path("Test9.xml")  
 data = mujoco.MjData(model)
 
 # Get body and joint IDs
@@ -32,7 +32,7 @@ force_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, force_id)
 # Constants
 slider_min = -0.22728446327643137
 slider_max =  0.003387345022720789
-hinge_min_deg = 55  # Hinge backwards angle
+hinge_min_deg = 135  # Hinge backwards angle, had been 55
 hinge_max_deg = 0   # Hinge upright angle
 
 # Lists to store data 
@@ -77,7 +77,7 @@ def map_slider_to_hinge(slider_pos):
     normalized = (slider_pos - slider_min) / (slider_max - slider_min)
 
     # Flip direction
-    hinge_angle = 55 * (1 - normalized)
+    hinge_angle = -135 * (1 - normalized) #had been 55
 
     return hinge_angle  # in degrees
 # Run simulation
