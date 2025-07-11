@@ -1,6 +1,5 @@
 import cv2
 from datetime import datetime
-#streams usb-camera video to my computer 
 
 # Get the current timestamp for the start time
 start_time = datetime.now().strftime("%m-%d_%H-%M-%S")
@@ -25,9 +24,10 @@ while True:
     if not ret:
         print("Error: Failed to capture frame.")
         break
-
+    
     # Add title to the frame
-    cv2.putText(frame, f"START TIME: {start_time}", (10, 30),
+    current_time = datetime.now().strftime("%m-%d_%H-%M-%S")
+    cv2.putText(frame, f"START TIME: {start_time}, CURRENT TIME: {current_time}", (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
     # Write the frame to the output file
@@ -38,7 +38,6 @@ while True:
 
     # Stop recording when 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        end_time = datetime.now().strftime("%m-%d_%H-%M-%S")
         break
 
 # Release resources
