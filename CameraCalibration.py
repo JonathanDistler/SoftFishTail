@@ -68,3 +68,12 @@ cv.imwrite('calibresult_1.png', dst)
 
 
 cv.destroyAllWindows()
+
+"""
+Settings for our particular camera
+Calibration successful: 0.1465472828049153
+Camera Matrix:
+[[794.06933744   0.         931.41508085]
+ [  0.         794.10552238 539.85862057]
+ [  0.           0.           1.        ]]
+"""
