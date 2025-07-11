@@ -1,11 +1,16 @@
 #This works with the ScaleReadingUpdate script to stream the data of the force output to the respective computer and save it in a CSV
 import serial
 import time
+from datetime import datetime
+
+# Get the current timestamp for the start time, will be used to overlay video with force with positional contorl
+global_start_time = datetime.now().strftime("%m-%d_%H-%M-%S")
+
 ser = serial.Serial('COM9', 9600)  # COM 9 is hardcoded from my comptuer
 start=time.time()
 
 with open('force_readings.csv', 'w') as f:
-    f.write('Force_Newtons\n')  # CSV header
+    f.write(f'Force_Newtons-{global_start_time}\n')  # CSV header
     try:
         while True:
             time_val=time.time()-start
