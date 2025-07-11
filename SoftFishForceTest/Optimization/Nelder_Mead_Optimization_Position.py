@@ -8,10 +8,13 @@ import math
 import os
 from datetime import datetime
 
-#goal of code is to find the maximum force output of the fish setup with the parameters begin the first 5 fluid coefficients and the motor speed
+#goal of optimization is to find the maximum distance traveled by the fish with changing fluid parameters and motor speeds 
+
 # Load model and data
-#runs with TendonFishFullSize.xml
-model = mujoco.MjModel.from_xml_path("Test9.xml")  
+#changes to FishTestSetup.xml, the relative pathway to the script
+#changed from test9.xml to test10.xml, where there is no force sensor to stop the fish from moving 
+#runs with Nelder_Mead_Fish.xml
+model = mujoco.MjModel.from_xml_path("Test10.xml")  
 data = mujoco.MjData(model)
 
 
@@ -19,12 +22,13 @@ data = mujoco.MjData(model)
 motor_body="motor"
 tail_body="finTail"
 head_body="head_mesh"
-force_body="force"
+
+#head_body starts at .45, so to minimize it, should look at all values less than .45 
+#head_pos=.45
 
 actuator_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, motor_body)
 tail_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, tail_body)
 head_id=mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, head_body)
-force_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_SENSOR, force_body)
 
 
 
@@ -41,7 +45,7 @@ x0=np.array([.1, .1 ,.1, 2, 1, 10 ])
 
 
 #a function that determines the maximum force output of the mujoco simulation given different fluidcoeff and datactrl inputs
-def force_sim (model, params):
+def pos_sim (model, params):
     cx, cy, cz, cl, cr, ctrlrange=params
 
     model.geom_fluid[tail_id]=np.array([cx, cy, cz, cl, cr, cd, cmx, cmy, cmz, cbl, cbr, cbd])
@@ -49,8 +53,8 @@ def force_sim (model, params):
 
     mujoco.mj_resetData(model, data)  # Reset time and state
     
-
-    max_force=0
+    #the start position of the head mesh
+    min_pos=.45
     while data.time < 1:
            
         # Step simulation twice for 2x speed, just once now
@@ -62,15 +66,18 @@ def force_sim (model, params):
         model.geom_fluid[tail_id]=np.array([cx, cy, cz, cl, cr, cd, cmx, cmy, cmz, cbl, cbr, cbd])
         model.geom_fluid[head_id]=np.array([cx, cy, cz, cl, cr, cd, cmx, cmy, cmz, cbl, cbr, cbd])
 
-
         data.ctrl[actuator_id] = ctrlrange
-        force_val = data.sensor("force").data
 
-        #compares the x-direction force to determine the output
-        if (force_val[0]>max_force):
-            max_force=force_val[0]
+        #grab the position value instead of force value 
+        position=data.qpos[head_id]
 
-    return(max_force)
+        #compares the x-direction position to determine the distance moved
+        #once the initial position it is looking for fish swimming values that take the fish negatively-so smaller values
+        if (position<min_pos):
+            min_pos=position
+        
+
+    return(min_pos)
 
 
 
@@ -81,10 +88,10 @@ def fish_simulation_force (params):
     #returns the maximum force of the data
     #makes all parameters positive
     params=np.clip(params,0,None)
-    force_val=force_sim(model,params)
+    pos_val=pos_sim(model,params)
 
-    #to maximize positive force, need to minimize negative force
-    return -force_val
+    #to minimize position, unlike force requires the smallest or most negative number 
+    return pos_val
 
 
 #runs through a nelder_mead simulation to determine the optimal parameters to "minimize" negative force, maximizing force output
@@ -94,5 +101,5 @@ print("Optimal parameters: ", result.x)
 
 
 """
-Optimal parameters:  [ 0.03961961 -0.02937881  0.08982278 -0.34819063  3.39292579  7.61030973]
+Optimal parameters:  [0.05415218 0.11622741 0.16444693 3.65093642 0.39667904 9.33366717]
 """
