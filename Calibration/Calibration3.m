@@ -2,6 +2,7 @@
 %goes away from linear interpolation method to a more accurate 3 significant-figure system
 
 %Same as Calibration.m, however, this is for the updated 1kg loadcell from HK711 force tester
+%For the 3kg loadcell, it produces a calibrated value of -887980 
 clf()
 
 %uses script from https://learn.sparkfun.com/tutorials/load-cell-amplifier-hx711-breakout-hookup-guide to calibrate a necessary constant for the 
