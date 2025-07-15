@@ -1,4 +1,4 @@
-%goal of this is to determine the force that is applied forward by reading the force csv produced by the testing and the head angle produced by the csv script
+%goal is to measure how much of the thrust produced by the fish goes to propelling it foward, thus it is the e-hat-1 component of thrust 
 clear length
 for index = 2:0.2:4  % Use colon syntax correctly
     figure;  % Opens a new figure each loop
@@ -23,7 +23,7 @@ for index = 2:0.2:4  % Use colon syntax correctly
     rawAngle = (data{3:end, 5});
     lengthAngle=length(rawAngle);
   
-    sineAngle=sind(rawAngle);
+    sineAngle=cosd(rawAngle);
 
     rawForce = string(forceData{3:end, 2});
     % Clean: remove 'kg' and whitespace
