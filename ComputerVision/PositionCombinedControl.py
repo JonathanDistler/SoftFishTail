@@ -87,6 +87,7 @@ with open(csv_filename, 'w') as f:
             position = servo.readPos()
             velocity = servo.readVel()
             load = servo.readLoad()
+            #am I getting the right start, should it be initial_time? 
             timestamp = time.time() - start
 
             # Store data
