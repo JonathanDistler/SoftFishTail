@@ -1,10 +1,21 @@
 # !/usr/bin/env python3
 #code almost entirely from Mike Yan Michelis
+#Working on developing a function to compute the angle between the fish_head (first bounding box) and a stationary bounding box:
+#could work on making stationary bounding box permanent to the frame 
 
 """Track bounding boxes within video.
 
-The first box is a rigidly mounted plate at the middle of the screen and the second box is the head of the fish. This script iterates over all different frequency videos and measures the angles of the head with respect to a 
-rigidly mounted box. It also removes redundancy of having to specify/hard code end frame and the fps
+Usage: python3 track_markers.py -f <filepath> -n <num_boxes> -s <start_frame> -e <end_frame>
+
+Example: python3 track_markers.py -f ~/Downloads/tracking/vid.mp4 -n 2 -s 10 -e 50
+
+Script for tracking N manually chosen bounding boxes within video. Point this script to the video file you would like to track and choose how many N bounding boxes are desired. These bounding box centers (markers) are stored in a CSV file afterwards. Two videos are created as well, one is the original video cut to [start_frame, end_frame], and the other is with the tracking bounding boxes displayed. If you for some reason desire to quite the tracking earlier than end_frame, you can press q to exit out.
+
+Note: OpenCV installation can sometimes have trouble with cv2.legacy.MultiTracker_create(), the version that worked is:
+opencv-contrib-python 4.5.2.52
+
+Should be able to parse through all of the videos in a for loop. Need to do 2 boxes with the first box being something stationary
+The second box should be the head of the fish at a standardized position
 
 """
 
@@ -27,13 +38,15 @@ def adjust_contrast(frame, alpha, beta):
 def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float):
     folder=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Real-to-Sim-tests"
     filepath=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Real-to-Sim-tests/{freq}.mp4"
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    end_frame=start_frame+total_frames
+    
+    
     
     cap = cv2.VideoCapture(filepath)
 
     fps = cap.get(cv2.CAP_PROP_FPS)
-
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    end_frame=start_frame+total_frames
+    
     framenum = 0
     print("Select bounding boxes in TAIL-TO-HEAD order.")
     while cap.isOpened():
