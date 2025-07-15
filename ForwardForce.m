@@ -1,5 +1,4 @@
-%goal is to measure how much of the thrust produced by the fish is in the direction of the head. Reverts from cosine back to sine
-
+%measures the force in the direction of the fish's head
 clear length
 for index = 2:0.2:4  % Use colon syntax correctly
     figure;  % Opens a new figure each loop
@@ -37,7 +36,7 @@ for index = 2:0.2:4  % Use colon syntax correctly
     %on an FPS conversion like previously
     rawTime=(forceData{3:end,1})
 
-    forwardForce=cleanForce.*sineAngle
+    forwardForce=-1*cleanForce.*sineAngle
 
     %plots force vs time for each respective hertz
     plot(rawTime,forwardForce)
@@ -52,6 +51,4 @@ for index = 2:0.2:4  % Use colon syntax correctly
     
   
 end
-
-
 
