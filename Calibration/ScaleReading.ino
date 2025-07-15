@@ -24,7 +24,7 @@
 */
 
 
-#define calibration_factor -2694200 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -355000 //This value is obtained using the SparkFun_HX711_Calibration sketch
 
 #include "HX711.h"
 
