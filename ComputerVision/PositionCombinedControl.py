@@ -47,7 +47,10 @@ if not camera.isOpened():
     print("Error: Could not open camera.")
     exit()
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-out = cv2.VideoWriter(video_filename, fourcc, 20.0, (640, 480))
+
+actual_fps = 12.5 / 1.96768  # ≈ 6.35, not 30 fps of the video streaming settings because inherent lag
+#had been hardcoded as 20
+out = cv2.VideoWriter(video_filename, fourcc, actual_fps, (640, 480))
 
 # ---------------------- Open Serial ----------------------
 ser = serial.Serial('COM9', 9600)

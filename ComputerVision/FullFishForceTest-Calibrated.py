@@ -107,7 +107,10 @@ with open(csv_filename, 'w') as f:
                 height, width = resized.shape[:2]
                 output_size = (width, height)
                 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-                out_video = cv2.VideoWriter(video_filename, fourcc, 1/commandTime, output_size)
+
+                actual_fps = 12.5 / 1.96768  # ≈ 6.35, not 30 fps of the video streaming settings because inherent lag
+                #had been hardcoded as 1 / commandTime
+                out_video = cv2.VideoWriter(video_filename, fourcc, actual_fps, output_size)
                 if not out_video.isOpened():
                     print("Error: Could not open video writer.")
                     exit()
