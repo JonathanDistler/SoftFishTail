@@ -1,4 +1,6 @@
 %goal is to measure how much of the thrust produced by the fish goes to propelling it foward, thus it is the e-hat-1 component of thrust 
+
+
 clear length
 for index = 2:0.2:4  % Use colon syntax correctly
     figure;  % Opens a new figure each loop
@@ -16,29 +18,30 @@ for index = 2:0.2:4  % Use colon syntax correctly
     forcefilename = sprintf(forceFile, roundedIndex);
     forceData = readtable(forcefilename);
 
-    %force in the directino of the thrust sensor, could read in force
-    %simultaneously
+    %force in the directino of the thrust sensor
     % Extract column 2 as strings, force, row 2 to match with the row for
     % time, and to avoid NaN in metaData
-    rawAngle = (data{3:end, 5});
+    %with the changed CV file, rawAngle will end up being 3. . . 4, instead
+    %of 3.. . 6
+    rawAngle = (data{3:end, 6});
     lengthAngle=length(rawAngle);
+    
   
     sineAngle=cosd(rawAngle);
 
     rawForce = string(forceData{3:end, 2});
     % Clean: remove 'kg' and whitespace
     cleanForce = str2double(erase(lower(strtrim(rawForce)), "kg"));
-
-    %cleans up time data 
-    rawTime = string(data{3:end, 1});
-    cleanTime=str2double(rawTime)
-
     lengthForce=length(cleanForce);
+
+    %brings in the time value from the force-value csv rather than relying
+    %on an FPS conversion like previously
+    rawTime=(forceData{3:end,1})
 
     forwardForce=cleanForce.*sineAngle
 
     %plots force vs time for each respective hertz
-    plot(cleanTime,forwardForce)
+    plot(rawTime,forwardForce)
     title(sprintf('%.1f Hz: Time vs Forward Force', roundedIndex));
     xlabel('Time (s)');
     ylabel('Force (kg)');
@@ -47,7 +50,8 @@ for index = 2:0.2:4  % Use colon syntax correctly
     filenameFig = fullfile(folder, sprintf('%.1f_HZ_TimevsFowardForce.fig', roundedIndex));
     saveas(gcf, filenameFig);
     
-
   
 end
+
+
 
