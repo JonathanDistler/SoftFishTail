@@ -1,5 +1,4 @@
-%goal is to measure how much of the thrust produced by the fish goes to propelling it foward, thus it is the e-hat-1 component of thrust 
-
+%goal is to measure how much of the thrust produced by the fish is in the direction of the head. Reverts from cosine back to sine
 
 clear length
 for index = 2:0.2:4  % Use colon syntax correctly
@@ -27,7 +26,7 @@ for index = 2:0.2:4  % Use colon syntax correctly
     lengthAngle=length(rawAngle);
     
   
-    sineAngle=cosd(rawAngle);
+    sineAngle=sind(rawAngle);
 
     rawForce = string(forceData{3:end, 2});
     % Clean: remove 'kg' and whitespace
@@ -42,6 +41,7 @@ for index = 2:0.2:4  % Use colon syntax correctly
 
     %plots force vs time for each respective hertz
     plot(rawTime,forwardForce)
+    yline(0,"r")
     title(sprintf('%.1f Hz: Time vs Forward Force', roundedIndex));
     xlabel('Time (s)');
     ylabel('Force (kg)');
