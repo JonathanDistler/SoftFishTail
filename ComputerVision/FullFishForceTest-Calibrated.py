@@ -46,8 +46,9 @@ goal_pos_data = np.zeros((all_steps + 2, 1))
 output_dir = r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HardwareOutput"
 os.makedirs(output_dir, exist_ok=True)
 global_start_time = datetime.now().strftime("%m-%d_%H-%M-%S")
-video_filename = os.path.join(output_dir, f'output_{global_start_time}.avi')
-csv_filename = os.path.join(output_dir, f'force_readings_{global_start_time}.csv')
+desiredFreq = round(desiredFreq, 1)
+video_filename = os.path.join(output_dir, f'{desiredFreq}.avi')
+csv_filename = os.path.join(output_dir, f'{desiredFreq}.csv')
 
 # ---------------------- Open Camera ----------------------
 camera = cv2.VideoCapture(0)
