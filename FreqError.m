@@ -1,7 +1,9 @@
-%%measures the error from the intended frequency to the actual frequency and plots it, base code via MattFern
+%%measures the difference between real frequency and intended frequency of motor, as well as graphing and saving locally
+
 %% Change user in directory
 dataDir = "C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HardwareOutput";
 
+function [] = parse_loop(start_val, end_val, step)
 %% USER SETTINGS: Toggle lines ON/OFF
 showPosition     = true;
 showGoal         = true;
@@ -10,8 +12,8 @@ showVelocity     = false;
 showLoad         = false;
 showAvgLoad      = true;  % New toggle for average load
 
-for i=1:.1:2
-    %% Clear previous plots and settings
+for i=start_val:step:end_val
+  %% Clear previous plots and settings
     close all;
     roundedIndex = round(i, 1);
     filename = sprintf("C:\\Users\\15405\\OneDrive\\Desktop\\Career\\ETHZ\\ETHZ Work\\HardwareOutput\\Servo_test_data_%.1f.csv", roundedIndex);
@@ -200,3 +202,9 @@ for i=1:.1:2
     avgFreq = gearRatio*slope/4096; %Hz
     fprintf('Average Frequency: %.3f Hz\n', avgFreq);
 end
+end
+
+parse_loop(1,2,.1);
+parse_loop(2.2,4,.2);
+
+
