@@ -5,15 +5,6 @@
 
 """Track bounding boxes within video.
 
-Usage: python3 track_markers.py -f <filepath> -n <num_boxes> -s <start_frame> -e <end_frame>
-
-Example: python3 track_markers.py -f ~/Downloads/tracking/vid.mp4 -n 2 -s 10 -e 50
-
-Script for tracking N manually chosen bounding boxes within video. Point this script to the video file you would like to track and choose how many N bounding boxes are desired. These bounding box centers (markers) are stored in a CSV file afterwards. Two videos are created as well, one is the original video cut to [start_frame, end_frame], and the other is with the tracking bounding boxes displayed. If you for some reason desire to quite the tracking earlier than end_frame, you can press q to exit out.
-
-Note: OpenCV installation can sometimes have trouble with cv2.legacy.MultiTracker_create(), the version that worked is:
-opencv-contrib-python 4.5.2.52
-
 Should be able to parse through all of the videos in a for loop. Need to do 2 boxes with the first box being something stationary
 The second box should be the head of the fish at a standardized position
 
@@ -36,8 +27,8 @@ def adjust_contrast(frame, alpha, beta):
 
 
 def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float):
-    folder=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Real-to-Sim-tests"
-    filepath=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Real-to-Sim-tests/{freq}.mp4"
+    folder=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HardwareOutput\Live-Tests"
+    filepath=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Live-Tests/{freq}.avi"
     
     
     
@@ -83,8 +74,8 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float)
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 
     
-    cut_movie = cv2.VideoWriter(f"{folder}/cut_movie_{freq}.mp4", fourcc, fps, (frame.shape[1], frame.shape[0]))
-    tracked_movie = cv2.VideoWriter(f"{folder}/CV_movie_{freq}.mp4", fourcc, fps, (frame.shape[1], frame.shape[0]))
+    cut_movie = cv2.VideoWriter(f"{folder}/CV_Tail_Track/cut_movie_{freq}_HZ.avi", fourcc, fps, (frame.shape[1], frame.shape[0]))
+    tracked_movie = cv2.VideoWriter(f"{folder}/CV_Tail_Track/CV_movie_{freq}_HZ.avi", fourcc, fps, (frame.shape[1], frame.shape[0]))
 
     #arrays for the markers, the metrics of the tail segments relative to the head, tail segments relative to each other, and the total tail-segment data
     markers = []
@@ -166,24 +157,19 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float)
     with open(f"{folder}/HeadSegement_rel_Stationary_{freq}.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
         #adds meta data to the top of the CSV
-        writer.writerow(["Number of Boxes","Total Time","Start Frame","End Frame","Video Path","Alpha","Beta"])
-        writer.writerow([num_boxes,(end_frame-start_frame)*(1/fps),start_frame,end_frame,filepath,alpha,beta])
+        writer.writerow(["Number of Boxes","Start Frame","End Frame","Video Path","Alpha","Beta"])
+        writer.writerow([num_boxes,start_frame,end_frame,filepath,alpha,beta])
 
         #adds real formatting for data
-        writer.writerow(["Time (s)", "Box Index", "dx", "dy", "Distance", "Angle"])
-        for framenum,i,dx,dy,distance,angle in all_rel_metrics:
-            if i==1:
-                value="Head"
-            else:
-                value="Stationary"
-            t=(1/fps)*framenum
+        writer.writerow(["dx", "dy", "Distance", "Angle"])
+        for framenum,dx,dy,distance,angle in all_rel_metrics:
             #times.append(t)
-            writer.writerow([t,value,dx,dy,distance,angle])
+            writer.writerow([t,dx,dy,distance,angle])
 
 
 if __name__ == "__main__":
     #for freq in np.arange(0.6, 2.1, 0.1): 
-    for freq in np.arange(0.6, .9, 0.2): 
+    for freq in np.arange(2.0, 4.2, 0.2): #2-4-inclusive
         freq = round(freq, 1)
 
         track_markers(
@@ -193,4 +179,3 @@ if __name__ == "__main__":
             start_frame=0,
             freq=freq
         )
-
