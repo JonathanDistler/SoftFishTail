@@ -2,7 +2,7 @@
 <!-- Measures the force of the fish (from the thrust of its tail) via the FishTest.py script and the force sensor on the block-->
 <!-- adds a realistic mass value to the bodies-->
 <!--adds realistic proportions and ratios amongst the tail length, tail joints, motor to head and motor to tail-->
-
+<!--adds a backwards force constraint to register tension, whereas forward measures compression-->
 <mujoco model="tendonFish">
     <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
         <flag contact="enable"/>
@@ -57,19 +57,19 @@
         <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
         
         <!--creates a loadcell body and overlapping mesh-->
-        <body name="slider_body" pos=".195 0 .5">
+        <body name="slider_body" pos=".201 0 .5">
             <!--creates a geometry, not a joint, restricts all movement-->
-            <geom type="box" size=".05 .05 .05" rgba="0 0 1 0" contype="1" mass=".1" conaffinity="1"/>
+            <geom type="box" size=".05 .05 .05" rgba="1 1 1 1" contype="1" mass=".1" conaffinity="1"/>
             <site name="ft_sensor" pos="0 0 0" rgba="1 1 1 0" size=".05 .05 .05" type="box" /> 
             <geom name="loadingCell" type="mesh" mesh="loadCell" pos="-.2725 -.055 .350" quat="-.7071 0 -.7071 0"  conaffinity="0" contype="0"/>
         </body>
 
-        <!--creates a loadcell body and overlapping mesh-->
-        <body name="slider_body" pos=".195 0 .5">
+        <!--creates a loadcell body and overlapping mesh, however, I change the transparency to zero to be mroe similar to real world-->
+        <body name="slider_body2" pos=".58 0 .5">
             <!--creates a geometry, not a joint, restricts all movement-->
-            <geom type="box" size=".05 2.05" rgba="0 0 1 0" contype="1" mass=".1" conaffinity="1"/>
-            <site name="ft_sensor" pos="0 0 0" rgba="1 1 1 0" size=".05 .05 .05" type="box" /> 
-            <geom name="loadingCell" type="mesh" mesh="loadCell" pos="-.2725 -.055 .350" quat="-.7071 0 -.7071 0"  conaffinity="0" contype="0"/>
+            <geom type="box" size=".05 .4 .05" rgba="0.0196078431373 0.960784313725 0.96862745098 0" contype="1" mass=".1" conaffinity="1"/>
+            <site name="ft_sensor2" pos="0 0 0" rgba="1 1 1 0" size=".05 .05 .05" type="box" /> 
+            <!--<geom name="loadingCell2" type="mesh" mesh="loadCell" pos="-.2725 -.055 .350" quat="-.7071 0 -.7071 0"  conaffinity="1" contype="1"/>-->
         </body>
 
         <body name="FishTank" pos="0 -.42 -.70">
@@ -87,8 +87,10 @@
 
         <!-- adds a slider range to keep the fish always propogating forward from its original com like in the simulation -->
         <!-- add a slider that keeps the head moving forward-->
+        <!-- adds a soft-constraint on the body to speed up simulation time -->
         <body pos=".35 0 0">
             <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-0.025669489880513867 0.003387345022720789"/>
+            <joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0" range="-0.025 0.025"/>
             <site name="COM" pos="0.02432519 0 0.00306519" size="0.015" material="marker"/>
 
             <!-- realistic mass should be about .1 kg, had been .25 -->
@@ -99,7 +101,7 @@
            <!--pretty much just translates the force of the fish's nose to a load amplifier and load censor, analogous to real-life testing-->
             <body name="SliderForce_Base" pos="-0.03432519 0 .50306519">
                     <geom name="horizontalHinge" type="cylinder" pos="0 0 0" size=".0225 .0625" material="alu" mass=".001"  quat=".7071 0 .7071 0" contype="1" conaffinity="1" />
-                    <geom name="horizontalHinge2" type="cylinder" pos=".15 0 0" size=".0225 .0625" material="alu" mass=".001"  quat=".7071 0 .7071 0" contype="1" conaffinity="1" />
+                    <geom name="horizontalHinge2" type="cylinder" pos=".1492 0 0" size=".0225 .0625" rgba="1 1 1 0" mass=".001"  quat=".7071 0 .7071 0" contype="1" conaffinity="1" />
                     <joint name="forceJoint2" type="slide" axis="1 0 0" damping="1"/>
 
                     <body name="ForceAmp_Base" pos="0.0625 0 -.5">
@@ -252,6 +254,7 @@
 
     <sensor>
         <force name = "force" site="ft_sensor" />
+        <force name = "force_2" site="ft_sensor2" />
 	</sensor>
 
 </mujoco>

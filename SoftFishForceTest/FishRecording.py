@@ -16,7 +16,8 @@ from datetime import datetime
 
 # Load model and data
 #changes to FishTestSetup.xml, the relative pathway to the script
-model = mujoco.MjModel.from_xml_path("Test9.xml")  
+#had previously been Test9.xml, now FishFinalSetup
+model = mujoco.MjModel.from_xml_path("FishFinalSetup.xml")  
 data = mujoco.MjData(model)
 
 # Get body and joint IDs
