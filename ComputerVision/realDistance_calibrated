@@ -7,16 +7,22 @@ import pandas as pd
 #then, determine the real-life distance given a pixel distance for a known height
 points = []
 
-#matrices from camera calibration
+#Calibration values from the assymetric calibration set
+# Camera matrix
 mtx = np.array([
-    [1.81568134e+04, 0.00000000e+00, 9.56161742e+02],
-    [0.00000000e+00, 1.32721393e+04, 5.42345423e+02],
-    [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
-    ])
+    [6854.02255, 0.0, 953.349510],
+    [0.0, 6329.72942, 534.921515],
+    [0.0, 0.0, 1.0]
+])
 
+# Distortion coefficients
 dist = np.array([
-    [-8.42669229e+01, 1.67955964e+04, -2.19710745e-02, -3.01774375e-01, 1.78927085e+01]
-    ])
+    1.93965100e+01,
+    1.03302061e+03,
+    6.03419410e-01,
+   -6.17968976e-02,
+   -1.74216458e-01
+])
 
 #undistorts fish-eye lens
 def undistort(mtx, dist, img):
