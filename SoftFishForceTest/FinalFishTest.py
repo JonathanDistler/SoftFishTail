@@ -115,6 +115,9 @@ while data.time < 7:
     # Write frame to video
     video_writer.write(img_bgr)
 
+    #keeps it to real-time
+    time.sleep(1 / fps)
+
 
 output_dir=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Fish_Simulation_Output"
 video_path=f"{output_dir}/Fish_Force_Test_{rate}"

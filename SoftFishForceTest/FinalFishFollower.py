@@ -85,6 +85,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 
         # Render one frame
         viewer.sync()
+        
 
 
 output_dir=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/Fish_Simulation_Output"
