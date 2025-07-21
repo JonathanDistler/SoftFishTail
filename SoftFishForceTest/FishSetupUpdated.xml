@@ -1,0 +1,264 @@
+<!--Creates a tendon fish based on Mike Yan Michelis' design. Adds a contact set between the head and the sliding block-->
+<!-- Measures the force of the fish (from the thrust of its tail) via the FishTest.py script and the force sensor on the block-->
+<!-- adds a realistic mass value to the bodies-->
+<!--adds realistic proportions and ratios amongst the tail length, tail joints, motor to head and motor to tail-->
+<!--adds a backwards force constraint to register tension, whereas forward measures compression-->
+<mujoco model="tendonFish">
+    <option gravity="0 0 0" density="1000" viscosity="0.0013" integrator="implicitfast" timestep="0.001" iterations="100" solver="Newton" tolerance="1e-15" ls_tolerance="1e-9" noslip_tolerance="1e-9" o_solimp="0 0.01 0.01 0.1 2">
+        <flag contact="enable"/>
+        <!-- <flag override="enable"/> -->
+    </option>
+
+    <visual>
+        <global offheight="2160" offwidth="3840"/>
+        <rgba haze=".3 .3 .3 1"/>
+    </visual>
+
+
+    <!--add a mesh that pivots like the actual fishtank setup-->
+    <!--imports meshes-->
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512"/>
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".15 .2 .35" rgb2=".2 .3 .45" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+        <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="10 10" texuniform="true"/>
+        <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tailV2.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\headExternal.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="Tank" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\glassTank.STL" scale="0.0015 0.0015 0.0025" />
+        <mesh name="loadCell" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\loadCell.STL" scale="0.015 0.015 0.015" />
+        <mesh name="4040" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\4040_L1.STL" scale="0.0015 0.0015 0.00343" />
+        <mesh name="tubeConnector" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tubeConnector.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="4040_smaller" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\4040_L1.STL" scale="0.0015 0.0015 0.0015" />
+        
+        <material name="acrylic" rgba="0.576470588235 0.694117647059 0.8 0.2"/>
+        <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
+        <material name="marker" rgba="0.0196078431373 0.960784313725 0.96862745098 .3"/>
+        <!--density of PLA taken to be 1430, not referenced as a body but all density=1430 references are taken to be PLA-->
+    </asset>
+
+    
+    <!--High damping and stifness values on tendon make it semi-rigid which is what is intended in the real-fish test-->
+    <default>
+        <joint type="hinge" pos="0 0 0" axis="0 0 1" range="-80 80" stiffness="0.65" damping="0.0"/>
+        <geom fluidcoef="0.1 0.1 0.1 2.0 1.0" condim="1"/>
+        <tendon width="0.005" rgba="0.941176470588 0.96862745098 0.0196078431373 .2" stiffness="60" damping="1"/>
+    </default>
+    
+
+    <worldbody>
+        <camera name="fixed" pos="0.4 -1.2 1.2" xyaxes="1 0 0 0 1 1"/>
+        <camera name="fixedTop" pos="-0.85 0 1.5" xyaxes="0 -1 0 1 0 0.75"/>
+        <!--<camera name="fixedDiag" pos="1 -1.3 1.1" xyaxes="0.8 0.6 0 -0.4 0.5 0.75"/>-->
+        <camera name="fixedDiag" pos=".55 -1.5 1.2" xyaxes="1 0 0  0 0.5 0.5"/>
+        <camera pos="0.625 -0.1 0.65" xyaxes="0.75 0.65 -0.1  -0.4 0.4 0.82"/>
+
+
+
+        <geom name="floor" pos="0 0 -0.2" size="0 0 1" type="plane" material="matplane"/>
+        <geom name="ceiling" pos="0 0 0.2" size="0 0 1" zaxis="0 0 -1" type="plane" rgba=".7 .1 .1 0"/>
+        <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+        
+        <!--creates a loadcell body and overlapping mesh to mimic our real-life testing-->
+        <body name="slider_body" pos=".275 .4 .5">
+            <!--creates a geometry, not a joint, restricts all movement-->
+            <geom type="box" size=".05 .05 .05" rgba="1 1 1 0" contype="1" mass=".1" conaffinity="1"/>
+            <site name="ft_sensor" pos="0 0 0" rgba="1 1 1 0" size=".05 .05 .05" type="box" /> 
+            <geom name="loadingCell" type="mesh" mesh="loadCell" pos="-.125 -.055 .350" quat="-.7071 0 -.7071 0"  conaffinity="0" contype="0"/>
+        </body>
+
+        <!--creates a loadcell body and overlapping mesh, however, I change the transparency to zero to be mroe similar to real world-->
+        <body name="slider_body2" pos=".575 .4 .5">
+            <!--creates a geometry, not a joint, restricts all movement-->
+            <geom type="box" size=".05 .4 .05" rgba="0.0196078431373 0.960784313725 0.96862745098 0" contype="1" mass=".1" conaffinity="1"/>
+            <site name="ft_sensor2" pos="0 0 0" rgba="1 1 1 0" size=".05 .05 .05" type="box" /> 
+            <!--<geom name="loadingCell2" type="mesh" mesh="loadCell" pos="-.2725 -.055 .350" quat="-.7071 0 -.7071 0"  conaffinity="1" contype="1"/>-->
+        </body>
+
+        <body name="FishTank" pos="0 -.42 -.70">
+            <geom name="TankMesh" type="mesh" mesh="Tank" pos="0 0 0" mass="0" contype="0" conaffinity="0" rgba="0.160784313725 0.588235294118 1 0.1"/>
+        </body>
+        
+        <!--adds a 40-40 setup like in the real-life test, they actually cover a lot of the components of the force-setup-->
+        <body name="40-40_setup" pos="0 0 .55">
+            <geom name="4040v1" type="mesh" mesh="4040" pos="0 -.42 0" mass=".001" contype="0" conaffinity="0" quat=".7071 0 .7071 0" />
+            <geom name="4040v2" type="mesh" mesh="4040" pos="0 .35 0" mass=".001" contype="0" conaffinity="0" quat=".7071 0 .7071 0" />
+
+            <geom name="4040v3" type="mesh" mesh="4040_smaller" pos="0 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+            <geom name="4040v4" type="mesh" mesh="4040_smaller" pos="1.585 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+        </body>
+
+        <!-- adds a slider range to keep the fish always propogating forward from its original com like in the simulation -->
+        <!-- add a slider that keeps the head moving forward-->
+        <!-- adds a soft-constraint on the body to speed up simulation time -->
+        <body pos=".35 0 0">
+            <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-0.05 0.015"/>
+            <joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0" range="-0.025 0.025"/>
+            <site name="COM" pos="0.02432519 0 0.00306519" size="0.015" material="marker"/>
+
+            <!-- realistic mass should be about .1 kg, had been .25 -->
+            <!--adds hard constraints in the head that act like pivots to turn the slider-force object and turn translational motion into rotational energy-->
+            <geom name="head_mesh" type="mesh" mesh="headMesh" pos=".1 0.065 .1"  material="acrylic" mass=".1" quat="0 0 .7071 -.7071" fluidshape="ellipsoid"  contype="0" conaffinity="0" rgba="1 1 1 1" />
+            <geom name="constraint_head" type="box" pos="0.1125 0 0" rgba=" 1 1 1 0" size=".005 .04 .04" contype="1" conaffinity="1" />
+            <geom name="constraint_head_2" type="box" pos="0.0615 0 0" rgba=" 1 1 1 0" size=".005 .04 .04" contype="1" conaffinity="1" />
+
+            <!--pretty much just translates the force of the fish's nose to a load amplifier and load censor, analogous to real-life testing-->
+            <!--Adds a slider that keeps is constrained to the x-axis, the first geometry is what actually inputs the force from the fish-->
+            <body name="SliderForce_Base" pos="0.025 0 .50306519">
+                    <joint name="forceJoint2" type="slide" axis="1 0 0" damping="1"  />
+                        <geom name="horizontalHinge" type="cylinder" size=".0175 .1" 
+                        material="alu" mass=".001" quat=".7071 0 .7071 0" 
+                        contype="1" conaffinity="1" pos=".05 .4 0"/>
+                    <!--geometry that takes fish's translational motion and turns it into rotational and back into translational force output-->
+                    <body name="ForceAmp_Base" pos="0.0625 0 -.5">
+                        <geom name="vertical" type="cylinder" pos="0 0 .25" size=".015 .25" material="alu" mass=".001"  contype="0" conaffinity="0" />
+                        <geom name="baseVertical" type="cylinder" pos="0 0 0" size=".0175 .0075" rgba="1 1 1 1" mass=".001" contype="1" conaffinity="1" />
+                        <geom name="tube1" type="mesh" mesh="tubeConnector" pos=".029 -.077 .375" mass=".001" contype="0" conaffinity="0" quat=".7071 0 0 .7071"/>
+                        <geom name="tube2" type="mesh" mesh="tubeConnector" pos="-.029 .075 .375" mass=".001" contype="0" conaffinity="0" quat="-.7071 0 0 .7071"/>
+
+                        <joint name="forceJoint1" type="hinge" axis=" 0 1 0" pos="0 0 -.25" />
+                        <geom name="outofpageHinge" type="cylinder" pos=" 0 0 .5" size=".015 .4" material="alu" mass=".001"  quat=".7071 .7071 0 0" contype="0" conaffinity="0" />
+                    </body>
+            </body>
+
+            <body pos="0.1635 0 0" name="motor" >
+                <joint name="motor_rotate" type="hinge" axis="0 0 1" pos="0 0 0" limited="false" stiffness="0" damping="0"/>
+                <geom name="motorSlider" type="cylinder" pos="0 0 0" size="0.0075 0.006" rgba=".1 .1 .1 1" density="1250" fluidshape="ellipsoid"/>
+                <geom name="motorRods" type="box" pos="0 0 0" size="0.0075 0.05 0.001975" rgba=".1 .1 .1 1" density="1250" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                <site name="bodyLeft" pos="0 -0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
+                <site name="bodyRight" pos="0 0.035 0.00345" size="0.005" rgba=".9 .6 .5 .5"/>
+            </body>
+           
+            
+            <!--center frame realistic mass should be around .2 kg , divided by 5 joints should be .04 kg per joint, however, we are using PLA density-->
+            <!--had been .290000-->
+            <!--to get correct sizing distance, this first position is moved from .29 to .24 then all are moved backwards .1-->
+            <!--changed color scheme to be more tolerant to color-blind people with blue-yellow white scheme-->
+            <body pos="0.24 0 0">
+                <geom name="joint0" type="cylinder" pos="0 0 0" size="0.0075 0.08625" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                <joint name="joint0"/>
+                <geom name="joint0-tail0" type="box" pos="0.0035 0 0" size="0.0535 0.0005 0.08625" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                <geom name="tail0" type="box" pos="0.014499999999999999 0 0" size="0.0075 0.0015 0.08625" rgba=".5 .7 .9 1" density="1250" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                <site name="marker4" pos="0.014499999999999999 0 0" size="0.005" material="marker"/>
+
+                <!--sizes of the tail_left and right aren't changed, positions further will be moved negatively .005-->
+                <geom name="tail0left" type="box" pos="0.014 -0.02575 0" size="0.003 0.018 0.007" rgba=".5 .7 .9 1" density="1250" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                <geom name="tail0right" type="box" pos="0.014 0.02575 0" size="0.003 0.018 0.007" rgba=".5 .7 .9 1" density="1250" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                <site name="tail0left" pos="0.014 -0.034 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                <site name="tail0right" pos="0.014 0.034 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                <geom name="tail0-joint1" type="box" pos="0.02575 0 0" size="0.00375 0.0005 0.08625" rgba="0 0 1 .4" mass="0.04" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+
+                <body pos="0.0445 0 0">
+                    <geom name="joint1" type="cylinder" pos="0 0 0" size="0.0075 0.0703125" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                    <joint name="joint1"/>
+                    <geom name="joint1-tail1" type="box" pos="0.00375 0 0" size="0.05375 0.0005 0.0703125" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                    <geom name="tail1" type="box" pos="0.015 0 0" size="0.0075 0.0015 0.0703125" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                    <site name="marker5" pos="0.015 0 0" size="0.005" material="marker"/>
+
+                    <geom name="tail1left" type="box" pos="0.0145 -0.02075 0" size="0.003 0.0148 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                    <geom name="tail1right" type="box" pos="0.0145 0.02075 0" size="0.003 0.0148 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                    <site name="tail1left" pos="0.0145 -0.026 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                    <site name="tail1right" pos="0.0145 0.026 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                    <geom name="tail1-joint2" type="box" pos="0.02675 0 0" size="0.00425 0.0005 0.0703125" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+
+                    <body pos="0.046 0 0">
+                        <geom name="joint2" type="cylinder" pos="0 0 0" size="0.0075 0.054375" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                        <joint name="joint2"/>
+                        <geom name="joint2-tail2" type="box" pos="0.00425 0 0" size="0.05425 0.0005 0.054375" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                        <geom name="tail2" type="box" pos="0.016 0 0" size="0.0075 0.0015 0.054375" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                        <site name="marker6" pos="0.016 0 0" size="0.005" material="marker"/>
+
+                        <geom name="tail2left" type="box" pos="0.0155 -0.01575 0" size="0.003 0.0116 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                        <geom name="tail2right" type="box" pos="0.0155 0.01575 0" size="0.003 0.0116 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                        <site name="tail2left" pos="0.0155 -0.020 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                        <site name="tail2right" pos="0.0155 0.020 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                        <geom name="tail2-joint3" type="box" pos="0.027 0 0" size="0.0035 0.0005 0.054375" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                        
+                        <body pos="0.0455 0 0">
+                            <geom name="joint3" type="cylinder" pos="0 0 0" size="0.0075 0.0384375" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                            <joint name="joint3"/>
+                            <geom name="joint3-tail3" type="box" pos="0.0035 0 0" size="0.0535 0.0005 0.0384375" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                            <geom name="tail3" type="box" pos="0.014499999999999999 0 0" size="0.0075 0.0015 0.0384375" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                            <site name="marker7" pos="0.014499999999999999 0 0" size="0.005" material="marker"/>
+
+                            <geom name="tail3left" type="box" pos="0.014 -0.01075 0" size="0.003 0.0084 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                            <geom name="tail3right" type="box" pos="0.014 0.01075 0" size="0.003 0.0084 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                            <site name="tail3left" pos="0.014 -0.012 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                            <site name="tail3right" pos="0.014 0.012 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                            <geom name="tail3-joint4" type="box" pos="0.0235 0 0" size="0.0015 0.0005 0.0384375" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+
+                            <body pos="0.039999999999999998 0 0">
+                                <geom name="joint4" type="cylinder" pos="0 0 0" size="0.0075 0.03046875" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                                <joint name="joint4"/>
+                                <geom name="joint4-tail4" type="box" pos="0.0015 0 0" size="0.0515 0.0005 0.03046875" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <geom name="tail4" type="box" pos="0.010499999999999999 0 0" size="0.0075 0.0015 0.03046875" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <site name="marker8" pos="0.010499999999999999 0 0" size="0.005" material="marker"/>
+
+                                <geom name="tail4left" type="box" pos="0.01 -0.00575 0" size="0.003 0.0052 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <geom name="tail4right" type="box" pos="0.01 0.00575 0" size="0.003 0.0052 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <site name="tail4left" pos="0.01 -0.008 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                                <site name="tail4right" pos="0.01 0.008 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                                <body pos="0.035 0 0">
+                                    <geom name="joint5" type="cylinder" pos="0 0 0" size="0.0075 0.0225" rgba="1 1 1 1" mass="0" contype="0" conaffinity="0"/>
+                                    <joint name="joint5"/>
+                                    <geom name="joint5-tail5" type="box" pos="0.0015 0 0" size="0.0515 0.0005 0.0225" rgba="0 0 1 .4" mass="0.001" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                    <geom name="tail5" type="box" pos="0.008 0 0" size="0.0055 0.0012 0.0225" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                    <site name="marker9" pos="0.008 0 0" size="0.005" material="marker"/>
+
+                                    <geom name="tail5left" type="box" pos="0.006 -0.00075 0" size="0.003 0.002 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                    <geom name="tail5right" type="box" pos="0.006 0.00075 0" size="0.003 0.002 0.007" rgba=".5 .7 .9 1" density="1430" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                    <site name="tail5left" pos="0.006 -0.003 0" size="0.004" rgba=".9 .6 .5 .5"/>
+                                    <site name="tail5right" pos="0.006 0.003 0" size="0.004" rgba=".9 .6 .5 .5"/>
+
+                                <!-- Tail Fin, realistic mass should be about .05 kg, was .15 kg -->
+                                <geom name="finTail" type="mesh"  mesh="tailMesh" pos="-.190 0 -.110" size="0.005 0.005 0.025" quat="0.7071 0.7071 0 0" rgba=".9 .9 .9 1" mass="0.05" fluidshape="ellipsoid" contype="0" conaffinity="0"/>
+                                <site name="marker10" pos="0.025 .0085 -0.5" size="0.005" material="marker"/>
+
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+
+    
+    </worldbody>
+
+    <!--tail organization-->
+    <tendon>
+        <spatial name="tendonLeft">
+            <site site="bodyLeft"/>
+            <site site="tail0left"/>
+            <site site="tail1left"/>
+            <site site="tail2left"/>
+            <site site="tail3right"/>
+            <site site="tail4right"/>
+            <site site="tail5right"/>
+        </spatial>
+        <spatial name="tendonRight" >
+            <site site="bodyRight"/>
+            <site site="tail0right"/>
+            <site site="tail1right"/>
+            <site site="tail2right"/>
+            <site site="tail3left"/>
+            <site site="tail4left"/> 
+            <site site="tail5left"/>           
+        </spatial>
+    </tendon>
+
+    <!--creates actuator to control motor and to couple the forceamplifier. Measures the force with a sensor-->
+    <actuator>
+        <velocity name="motor" joint="motor_rotate" kv="100" ctrllimited="true" ctrlrange="-20 20" forcerange="-5 5"/>
+         <!--<position name="force_actuator" joint="forceJoint" kp="500"/>-->
+    </actuator>
+
+    <sensor>
+        <force name = "force" site="ft_sensor" />
+        <force name = "force_2" site="ft_sensor2" />
+	</sensor>
+
+</mujoco>
