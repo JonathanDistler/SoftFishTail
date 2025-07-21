@@ -1,4 +1,5 @@
-%measures the force in the direction of the fish's head
+%measures the force in the direction of the fishs head
+
 clear length
 for index = 2:0.2:4  % Use colon syntax correctly
     figure;  % Opens a new figure each loop
