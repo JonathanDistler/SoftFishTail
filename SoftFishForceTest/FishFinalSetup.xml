@@ -47,8 +47,9 @@
     <worldbody>
         <camera name="fixed" pos="0.4 -1.2 1.2" xyaxes="1 0 0 0 1 1"/>
         <camera name="fixedTop" pos="-0.85 0 1.5" xyaxes="0 -1 0 1 0 0.75"/>
-        <camera name="fixedDiag" pos="1.2 -1.3 1.3" xyaxes="0.8 0.6 0 -0.4 0.5 0.75"/>
-        <camera pos="0.625 -0.842 0.620" xyaxes="0.758 0.653 -0.000 -0.468 0.544 0.697"/>
+        <!--<camera name="fixedDiag" pos="1 -1.3 1.1" xyaxes="0.8 0.6 0 -0.4 0.5 0.75"/>-->
+        <camera name="fixedDiag" pos=".55 -1.5 1.2" xyaxes="1 0 0  0 0.5 0.5"/>
+        <camera pos="0.625 -0.1 0.65" xyaxes="0.75 0.65 -0.1  -0.4 0.4 0.82"/>
 
 
 
