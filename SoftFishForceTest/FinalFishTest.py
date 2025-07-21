@@ -45,11 +45,14 @@ force_vals_backward = []
 positions = []
 time_vals=[]
 
+
+#changes resolution to match real-world USB camera
+frame_width = 2592   # adjust if needed
+frame_height = 1944  # adjust if needed
+fps = 30
+
 #change the resolution to be higher 
-renderer = mujoco.renderer.Renderer(model)
-frame_width = 640   # adjust if needed
-frame_height = 480  # adjust if needed
-fps = 60
+renderer = mujoco.renderer.Renderer(model, height=frame_height, width=frame_width)
 
 #video path, same as eventual graphs
 video_path=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/Fish_Force_Test_{rate}.mp4"
@@ -66,12 +69,17 @@ video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_heig
     #viewer.cam.distance = 2.0
     #viewer.cam.elevation = -20.0
     #viewer.cam.azimuth = 45.0
+#tries to get a matching FPS to real time
+sim_steps_per_frame = int((1 / fps) / model.opt.timestep)
 
 while data.time < 7:
-    # Step the simulation forward
-    mujoco.mj_step(model, data)
 
-    data.ctrl[actuator_id] = rate
+    # Step the simulation forward
+    #loses a lot of continuity with this, but matches real-world time rate
+    for i in range(sim_steps_per_frame):
+        mujoco.mj_step(model, data)
+        data.ctrl[actuator_id] = rate
+
 
     # Read force and position values
     force_val = (data.sensor("force").data)*-9.8
@@ -108,7 +116,7 @@ while data.time < 7:
     video_writer.write(img_bgr)
 
 
-output_dir=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/Fish_Simulation_Output"
+output_dir=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Fish_Simulation_Output"
 video_path=f"{output_dir}/Fish_Force_Test_{rate}"
 video_writer.release()
 print(f"Saved video to {video_path}")

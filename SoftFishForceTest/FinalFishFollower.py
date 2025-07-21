@@ -45,18 +45,6 @@ force_vals_backward = []
 positions = []
 time_vals=[]
 
-#change the resolution to be higher 
-renderer = mujoco.renderer.Renderer(model)
-frame_width = 640   # adjust if needed
-frame_height = 480  # adjust if needed
-fps = 60
-
-#video path, same as eventual graphs
-video_path=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/Fish_Force_Test_{rate}.mp4"
-# Define OpenCV video writer
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or use 'XVID', 'avc1', etc.
-video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_height))
-
 ##launches viewer to see the fish in real-time
 with mujoco.viewer.launch_passive(model, data) as viewer:
     # Set camera parameters once started, now the camear tracks the fish_head_id
@@ -65,38 +53,38 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     #tracks the fish head id with the following parameters to keep a distance of 2 away at an elevation fo 20 
     viewer.cam.distance = 2.0
     viewer.cam.elevation = -20.0
-    viewer.cam.azimuth = 45.0
+    viewer.cam.azimuth = 75.0
 
-while data.time < 7:
-    # Step the simulation forward
-    mujoco.mj_step(model, data)
+    while data.time < 7:
+        # Step the simulation forward
+        mujoco.mj_step(model, data)
 
-    data.ctrl[actuator_id] = rate
+        data.ctrl[actuator_id] = rate
 
-    # Read force and position values
-    force_val = (data.sensor("force").data)*-9.8
-    force_val=force_val[0]
-    force_vals_forward.append(force_val)
+        # Read force and position values
+        force_val = (data.sensor("force").data)*-9.8
+        force_val=force_val[0]
+        force_vals_forward.append(force_val)
 
-    # Read force and position values from second sensor 
-    force_val_2 = (data.sensor("force_2").data)*-9.8
-    force_val_2=force_val_2[0]
-    force_vals_backward.append(force_val_2)
+        # Read force and position values from second sensor 
+        force_val_2 = (data.sensor("force_2").data)*-9.8
+        force_val_2=force_val_2[0]
+        force_vals_backward.append(force_val_2)
 
-    #sanity check on the forces, it is intended that force 2 is the tension and force 1 is compression 
-    print(f"Force 1 (Compression): {force_val}, Force 2 (Tension): {force_val_2}")
+        #sanity check on the forces, it is intended that force 2 is the tension and force 1 is compression 
+        print(f"Force 1 (Compression): {force_val}, Force 2 (Tension): {force_val_2}")
 
-    #determines the position of the head to represent the general movements of the fish body (looking only along x-axis)
-    position=data.qpos[head_id]
+        #determines the position of the head to represent the general movements of the fish body (looking only along x-axis)
+        position=data.qpos[head_id]
 
-    #position and time of the fish 
-    print(f"Time: {data.time:.2f}")
-    print(f"Position of the Fish: {position}")
-    time_vals.append(data.time)
-    positions.append(position)
+        #position and time of the fish 
+        print(f"Time: {data.time:.2f}")
+        print(f"Position of the Fish: {position}")
+        time_vals.append(data.time)
+        positions.append(position)
 
-    # Render one frame
-    viewer.sync()
+        # Render one frame
+        viewer.sync()
 
 
 output_dir=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Fish_Simulation_Output/Fish_Simulation_Output"
