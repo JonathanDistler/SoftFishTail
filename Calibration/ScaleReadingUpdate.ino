@@ -22,6 +22,8 @@
  The HX711 board can be powered from 2.7V to 5V so the Arduino 5V power should be fine.
 
  This is a barebone version of ScaleReading that is intended to serial stream data to the ForceTimeSerialComm script to save on the respective computer given the Arduino's limited storage capabilities
+
+ Roughly the same as ScaleReading.ino, however, this streams in N with the gravitational constant multiplied by the KG data
  
 */
 
