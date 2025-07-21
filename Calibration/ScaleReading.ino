@@ -20,6 +20,9 @@
  GND -> GND
  
  The HX711 board can be powered from 2.7V to 5V so the Arduino 5V power should be fine.
+
+
+ [Works with the SerialComm script. The arduino needs to be started and streaming data, but the serial-output has to be closed on the IDE for this to be transmitted to the python script. 
  
 */
 
