@@ -1,7 +1,8 @@
 #need to run this in commandshell before running:  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 #run this in commandshell to run script: ./MultiTestAgent.ps1
 # Define working directory
-$scriptDir = "C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Dynamixel_Control\softFish\CombinedTesting"
+$scriptDir = "C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\SoftFishTail\HardwareTests"
+#need to import dynamixel class for this to work, then ScriptDir_2 would be in that respective directory
 $scriptDir_2 = "C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Dynamixel_Control\softFish"
 
 #this value will be changed between 1-4 and this will reflect in all other relates files
@@ -15,7 +16,7 @@ Remove-Item "$scriptDir\motor_control_ended.txt" -ErrorAction SilentlyContinue
 # Define script names
 $script1 = "CameraControl.py"
 $script2 = "ForceTimeSerialComm.py"
-$script3 = "positionControl2.py" #had been positionControl
+$script3 = "MotorControl.py" #had been positionControl
 
 # Start Job 1: Camera control
 $job1 = Start-Job { Set-Location $using:scriptDir; python $using:script1 "$using:frequency" }
@@ -68,5 +69,5 @@ Write-Output $output1
 Write-Host "`n=== Output from Job 2 (ForceTimeSerialComm.py) ==="
 Write-Output $output2
 
-Write-Host "`n=== Output from Job 3 (positionControl2.py) ==="
+Write-Host "`n=== Output from Job 3 (MotorControl.py) ==="
 Write-Output $output3

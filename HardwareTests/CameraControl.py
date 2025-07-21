@@ -39,7 +39,7 @@ out = cv2.VideoWriter(video_filename, fourcc, fps, (width, height))
 
 
 # Define absolute paths for sync files
-signal_dir = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/Dynamixel_Control/softFish/CombinedTesting"
+signal_dir = "C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\SoftFishTail\HardwareTests\CombinedTesting"
 camera_started_file = os.path.join(signal_dir, "camera_started.txt")
 stop_signal_file = os.path.join(signal_dir, "stop_signal.txt")
 
