@@ -1,5 +1,6 @@
 %final update on the HX711 calibration
 %goes away from linear interpolation method to a more accurate 3 significant-figure system
+%no longer having to worry about significant figure issues. Can just roughly average out the values to get a pretty good calibration value
 
 %Same as Calibration.m, however, this is for the updated 1kg loadcell from HK711 force tester
 %For the 3kg loadcell, it produces a calibrated value of -887980 
