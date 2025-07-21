@@ -27,8 +27,8 @@ def adjust_contrast(frame, alpha, beta):
 
 
 def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float):
-    folder=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HardwareOutput\Live-Tests"
-    filepath=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/Live-Tests/{freq}.avi"
+    folder=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HardwareOutput"
+    filepath=f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/{freq}.avi"
     
     
     
