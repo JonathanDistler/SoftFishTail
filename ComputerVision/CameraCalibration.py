@@ -17,7 +17,7 @@ objp[:, :2] *= square_size
 objpoints = []
 imgpoints = []
 
-images = glob.glob('*.jpg')
+images = glob.glob(r'C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Dynamixel_Control\softFish\CV\Calibration\ChessboardCalibrationPhotos\*.jpg')
 print(f"Found {len(images)} images.")
 
 for fname in images:
@@ -42,9 +42,9 @@ if len(objpoints) > 0:
 
 
 
-img = cv.imread(r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HatBottle.jpg")
-h,  w = img.shape[:2]
-newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+#img = cv.imread(r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\HatBottle.jpg")
+#h,  w = img.shape[:2]
+#newcameramtx, roi = cv.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
 
 """
 # undistort
@@ -59,15 +59,21 @@ cv.imwrite('calibresult_2.png', dst)
 
 
 # undistort
-dst = cv.undistort(img, mtx, dist, None, newcameramtx)
+#dst = cv.undistort(img, mtx, dist, None, newcameramtx)
 
 # crop the image
-x, y, w, h = roi
-dst = dst[y:y+h, x:x+w]
-cv.imwrite('calibresult_1.png', dst)
+#x, y, w, h = roi
+#dst = dst[y:y+h, x:x+w]
+#cv.imwrite('calibresult_1.png', dst)
 
-
+print("MTX",mtx)
+print("DIST",dist)
+print("DST",dst)
+print("RET",ret)
+print("RVECS",rvecs)
+print("TVECS",tvecs)
 cv.destroyAllWindows()
+
 """
 [Updated Parameters for our camera at 74.1 cm away]
 MTX [[850.46282868   0.         926.47015089]
@@ -191,123 +197,6 @@ TVECS (array([[ 174.83749666],
        [ 747.92733216]]), array([[ 130.52926316],
        [-350.65412819],
        [ 746.32997222]]))
-    """
 
 
-
-
-"""
-Settings for our particular camera at the distance the fish will be from the camera 
-
-Found 11 images.
-MTX [[1.81568134e+04 0.00000000e+00 9.56161742e+02]
- [0.00000000e+00 1.32721393e+04 5.42345423e+02]
- [0.00000000e+00 0.00000000e+00 1.00000000e+00]]
-
-
-DIST [[-8.42669229e+01  1.67955964e+04 -2.19710745e-02 -3.01774375e-01
-   1.78927085e+01]]
-
-
-DST [[[48 36 36]
-  [46 36 36]
-  [44 40 39]
-  ...
-  [ 0  0  0]
-  [ 0  0  0]
-  [ 0  0  0]]
-
- [[46 35 35]
-  [44 37 37]
-  [47 39 39]
-  ...
-  [ 0  0  0]
-  [ 0  0  0]
-  [ 0  0  0]]
-
- [[43 35 35]
-  [45 37 37]
-  [49 40 38]
-  ...
-  [ 0  0  0]
-  [ 0  0  0]
-  [ 0  0  0]]
-
- ...
-
- [[28 19 24]
-  [27 18 25]
-  [29 22 27]
-  ...
-  [24 28 17]
-  [27 30 19]
-  [ 2  3  2]]
-
- [[30 18 24]
-  [27 16 23]
-  [27 18 25]
-  ...
-  [23 30 18]
-  [23 31 19]
-  [ 0  0  0]]
-
- [[31 18 23]
-  [30 18 24]
-  [28 17 25]
-  ...
-  [22 31 18]
-  [12 17 10]
-  [ 0  0  0]]]
-
-RET 0.4249369251351803
-
-RVECS (array([[ 0.5895107 ],
-       [-0.57719099],
-       [-1.47901223]]), array([[ 0.58951013],
-       [-0.57749148],
-       [-1.47889114]]), array([[ 0.58147816],
-       [-0.58617926],
-       [-1.47654078]]), array([[ 0.58109033],
-       [-0.58569294],
-       [-1.47674032]]), array([[ 0.58883795],
-       [-0.59641857],
-       [-1.47149378]]), array([[ 0.58832388],
-       [-0.59624867],
-       [-1.47167891]]), array([[-0.00179468],
-       [-0.76037598],
-       [ 0.01925017]]), array([[-0.00182056],
-       [-0.76024474],
-       [ 0.01927602]]), array([[-0.00483241],
-       [-0.76249411],
-       [ 0.01958751]]), array([[-0.00491668],
-       [-0.76253942],
-       [ 0.01951434]]), array([[ 0.003601  ],
-       [-0.75352749],
-       [ 0.01599649]]))
-
-TVECS (array([[  -59.34418572],
-       [  -33.28582945],
-       [12988.32016243]]), array([[  -60.25328961],
-       [  -33.3599577 ],
-       [12992.45247328]]), array([[-9.28416127e+00],
-       [-3.32265263e+01],
-       [ 1.30466841e+04]]), array([[-9.61815350e+00],
-       [-3.32034810e+01],
-       [ 1.30525242e+04]]), array([[  -77.37292598],
-       [  -34.51757393],
-       [12853.57393317]]), array([[  -77.64262181],
-       [  -34.54043854],
-       [12856.16733583]]), array([[  -28.16871195],
-       [ -338.84332683],
-       [12922.05679205]]), array([[  -28.19334579],
-       [ -338.78739211],
-       [12921.6509094 ]]), array([[  -58.99494721],
-       [ -339.32467026],
-       [12769.69490817]]), array([[  -59.01300913],
-       [ -339.29905574],
-       [12768.89881924]]), array([[  -33.38620919],
-       [ -338.45637179],
-       [12687.58587936]]))
-       """
-
-
+  """
