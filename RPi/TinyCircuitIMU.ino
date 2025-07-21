@@ -9,6 +9,9 @@
 #include <WiFi101.h>        // this library is for the wifi connections
 
 
+//NEED to import TinyCircuit SAMD board module to use this in Arduino, select TinyZero
+
+
 #define USB 1
 #define WIFI 2
 

@@ -18,6 +18,7 @@ picam2.start()
 sleep(2)  # Let camera warm up
 
 # Take multiple pictures
+#can use a higher shutter_number to result in more pictures being taken. Used in the future for live CV test
 shutter_number = 3
 for i in range(shutter_number):
     time_val = str(datetime.now())

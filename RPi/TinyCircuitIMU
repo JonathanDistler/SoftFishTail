@@ -5,13 +5,8 @@
 #Import python packages for c types and
 # os functions
 
+#NEED to import TinyCircuit SAMD board module to use this in Arduino, select TinyZero
 
-#need to clean the code up so that it looks nicer and streams data in an easier to handle way, as well as maybe saving in a CSVS
-#first step is better formatting
-#next step is deleting unnecessary imports 
-#cleanup the folder
-#work on hardcoding the USB port
-#
 
 import os
 import sys
