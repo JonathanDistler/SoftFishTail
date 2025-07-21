@@ -1,4 +1,4 @@
-%Same as Calibration.m, however, this is for the updated 1kg loadcell from HK711 force tester
+%calibration test to interpolate between different load cell calibration values in the case of uncertainty in significant figures
 clf()
 
 %uses script from https://learn.sparkfun.com/tutorials/load-cell-amplifier-hx711-breakout-hookup-guide to calibrate a necessary constant for the 
