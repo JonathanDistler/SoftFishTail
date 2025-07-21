@@ -2,8 +2,7 @@
 import numpy as np
 import cv2 as cv
 import glob
-#74.1 away from front of lens cover, distance of the board from focal lens
-#creates a calibration script for an assymetric grid with 44 circles, and a real-world distance of 4cm between the middle of each circle and the next on its respective row (of which there are 11)
+
 # termination criteria
 criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
@@ -30,7 +29,7 @@ img_points = []
 
 
 # Extracting path of individual image stored in a given directory
-images = glob.glob(r'C:\Users\15405\OneDrive\Pictures\Camera Roll\*.jpg')
+images = glob.glob(r'C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Dynamixel_Control\softFish\CV\Calibration\AssymetricCalibrationPhotos\*.jpg')
 
 for f in images:
     # Loading image
