@@ -1,77 +1,124 @@
+import cv2
 import numpy as np
-import json
-import cv2 as cv
-import os
+import pandas as pd
 
-#this function from https://www.robotexchange.io/t/how-to-calibrate-a-camera-and-convert-pixel-distance-to-real-world-distance/3314, uses the our lab's chessboard to determine the distance in mm from a certain pixel_distance
-#could possibly overlay on image/video postprocessing and determine the pixel distance between the two points
 
-def pixel_to_real_distance(pixel_distance, image_path, calibration_file_path='./images/calibration_data.json', real_checkerboard_size_mm=30, checkerboard_size=(8, 11)):
+#goal of this code is to take a known value of height at the distance the fish is being measured, calibrate the camera to that distance
+#then, determine the real-life distance given a pixel distance for a known height
+points = []
+
+"""
+Camera matrix and distortion coefficients from rectangular calibration
+# Camera matrix
+mtx = np.array([
+    [850.46282868, 0.0, 926.47015089],
+    [0.0, 850.34124243, 546.3733339],
+    [0.0, 0.0, 1.0]
+])
+
+# Distortion coefficients
+dist = np.array([
+    -3.20324366e-01,
+     1.46621572e-01,
+    -2.06803818e-03,
+    -2.81291640e-04,
+    -6.95534360e-02
+])
+"""
+#Calibration values from the assymetric calibration set
+# Camera matrix
+mtx = np.array([
+    [6854.02255, 0.0, 953.349510],
+    [0.0, 6329.72942, 534.921515],
+    [0.0, 0.0, 1.0]
+])
+
+# Distortion coefficients
+dist = np.array([
+    1.93965100e+01,
+    1.03302061e+03,
+    6.03419410e-01,
+   -6.17968976e-02,
+   -1.74216458e-01
+])
+
+#undistorts fish-eye lens
+def undistort(mtx, dist, img):
+    img = img
+    h,  w = img.shape[:2]
+    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+
     """
-    Calculate the real-world distance in mm for a given pixel distance using calibration data.
-
-    Args:
-        pixel_distance (float): Distance in pixels to convert.
-        image_path (str): Path to the image containing the checkerboard pattern.
-        calibration_file_path (str): Path to the JSON file with calibration data.
-        real_checkerboard_size_mm (float): Real-world size of one checkerboard square in mm.
-        checkerboard_size (tuple): Number of inner corners per row and column on the checkerboard.
-
-    Returns:
-        float: Real-world distance in mm.
+    # undistort
+    mapx, mapy = cv.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h), 5)
+    dst = cv.remap(img, mapx, mapy, cv.INTER_LINEAR)
+ 
+    # crop the image
+    x, y, w, h = roi
+    dst = dst[y:y+h, x:x+w]
+    cv.imwrite('calibresult_2.png', dst)
     """
-    """
-    # Load the saved camera calibration data from JSON
-    if os.path.exists(calibration_file_path):
-        with open(calibration_file_path, 'r') as f:
-            calibration_data = json.load(f)
-        camera_matrix = np.array(calibration_data['camera_matrix'])
-        dist_coeffs = np.array(calibration_data['dist_coeffs'])
-    else:
-        raise FileNotFoundError(f"{calibration_file_path} not found.")
-    """
-    camera_matrix = np.array([
-    [1.81568134e+04, 0.00000000e+00, 9.56161742e+02],
-    [0.00000000e+00, 1.32721393e+04, 5.42345423e+02],
-    [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
-    ])
 
-    dist_coeffs = np.array([
-    [-8.42669229e+01, 1.67955964e+04, -2.19710745e-02, -3.01774375e-01, 1.78927085e+01]
-    ])
-    
-    # Read the image specified in the argument
-    img = cv.imread(image_path)
-    if img is None:
-        raise FileNotFoundError(f"Failed to load image at {image_path}")
-    
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    
-    # Find the checkerboard corners
-    ret, corners = cv.findChessboardCorners(gray, checkerboard_size, None)
-    
-    if ret:
-        # Refine corners
-        corners2 = cv.cornerSubPix(
-            gray, corners, (11, 11), (-1, -1),
-            (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-        )
 
-        # Calculate the distance between two adjacent corners in the checkerboard
-        pixel_checkerboard_distance = np.linalg.norm(corners2[0] - corners2[1])
+    # undistort
+    dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
 
-        # Real-world distance (mm) per pixel
-        mm_per_pixel = real_checkerboard_size_mm / pixel_checkerboard_distance
+    # crop the image
+    x, y, w, h = roi
+    dst = dst[y:y+h, x:x+w]
+    return(dst)
 
-        # Convert the pixel distance to real-world distance in mm
-        real_distance_mm = pixel_distance * mm_per_pixel
-        return real_distance_mm
-    else:
-        raise Exception("Checkerboard not detected in the image!")
-    
-result = pixel_to_real_distance(
-    100,
-    "C:\\Users\\15405\\OneDrive\\Pictures\\Camera Roll\\WIN_20250717_13_33_09_Pro.jpg"
-)
+#registers click
+def click_event(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        points.append((x, y))
+        cv2.circle(param, (x, y), 5, (0, 255, 0), -1)
+        cv2.imshow('Image', param)
 
-print("The distance is: ",result)
+# Load an image or video frame
+#this is just a straight read line
+img = cv2.imread(r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Dynamixel_Control\softFish\CV\Calibration\PixelDistancePhotos\WIN_20250721_13_11_42_Pro.jpg")  # or capture a frame from video
+#known height of 9.84 cm, 98.4 mm
+if img is None:
+    raise ValueError("Failed to load image.")
+
+#undistorts image
+img_update=undistort(mtx, dist, img)
+cv2.imshow('Image', img_update)
+cv2.setMouseCallback('Image', click_event, param=img_update)
+print("Click two points to measure pixel distance (Top and bottom of line).")
+
+#will measure the straight line distance between top and bottom 
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+#registers two points have been clicked, then computes distance
+if len(points) == 2:
+    pt1 = np.array(points[0], dtype=np.float32)
+    pt2 = np.array(points[1], dtype=np.float32)
+    pixel_distance = np.linalg.norm(pt1 - pt2)
+    print(f"Pixel distance between points: {pixel_distance:.2f} pixels")
+else:
+    print("You need to click exactly two points.")
+
+#actual measured distance, converts to a pixel/cm ratio
+actual_distance=9.84
+pixel_per_cm=pixel_distance/actual_distance
+print("Pixel per cm is", pixel_per_cm)
+
+#head angle metrics csv
+input_csv=r"C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\Fish_CV_Output\Head_Angle_Metrics.csv"
+# Read the whole CSV into a DataFrame
+df = pd.read_csv(input_csv)
+
+#loads data, makes sure it is a float
+column_data = (df.iloc[:, 3]) #want fourth column, index=3
+cleaned_data=column_data[3:-1] #again, want the fourth row to end
+# Ensure cleaned_data is numeric
+cleaned_data = cleaned_data.astype(float)
+
+#converts column from pixel to real (mm) distance
+real_distance=(1/(pixel_per_cm))*cleaned_data #1/pixel_mm gives mm/pixel *pixel distance gives real distance
+print("Real distances from pixel values:",real_distance)
+
+#even if there is a pitch, it is so minor that it shouldn't drastically change the matrix values
