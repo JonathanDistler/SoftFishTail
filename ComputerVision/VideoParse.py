@@ -3,9 +3,11 @@ import numpy as np
 import time
 #This allows you to parse through a video frame by frame and edit it with the camera calibration. This could be used well for a post-process script. 
 
+#frequency written as a double with one decimal, could parse over all of the videos. Computationally difficult
+freq=2.0
 # Input and output paths
-video_path = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/output_07-14_11-03-34.mp4"
-output_path = "C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/undistorted_output.avi"
+video_path = f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/{freq}"
+output_path = f"C:/Users/15405/OneDrive/Desktop/Career/ETHZ/ETHZ Work/HardwareOutput/undistorted_output-{freq}.avi"
 
 # Load video
 video_capture = cv2.VideoCapture(video_path)
