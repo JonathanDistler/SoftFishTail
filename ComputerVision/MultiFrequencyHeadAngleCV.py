@@ -153,8 +153,8 @@ def track_markers(filepath: str, num_boxes: int, start_frame: int,  freq: float)
     cv2.destroyAllWindows()
 
 
-    np.savetxt(f"{folder}/markers_{freq}.csv", markers, delimiter=",")
-    with open(f"{folder}/HeadSegement_rel_Stationary_{freq}.csv", mode='w', newline='') as file:
+    np.savetxt(f"{folder}/CV_Tail_Track/markers_{freq}.csv", markers, delimiter=",")
+    with open(f"{folder}/CV_Tail_Track/HeadSegement_rel_Stationary_{freq}.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
         #adds meta data to the top of the CSV
         writer.writerow(["Number of Boxes","Start Frame","End Frame","Video Path","Alpha","Beta"])
