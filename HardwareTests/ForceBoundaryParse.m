@@ -1,6 +1,9 @@
-%goal is to parse over the force vs time graphs and determine the ranges for which the motor has stopped working and the range after the motor has stopped working. conditions are semi-arbitrary. A lot of them were hardcoded visually. Next step would be to implement the cv script to determine when it touches a wall-fish's head angle too great
 figure;  % creates a new figure each loop
+
+time_data = {};  % initialize once before the loop
+
 for index=2:.2:3.8
+    indexed_time_date=[];
     roundedIndex = round(index, 1);
     
     filename = sprintf("C:\\Users\\15405\\OneDrive\\Desktop\\Career\\ETHZ\\ETHZ Work\\HardwareOutput\\%.1f_unfiltered.csv", roundedIndex);
@@ -47,11 +50,31 @@ for index=2:.2:3.8
     max_index=min_vals(1)
     min_index=min_vals_2(1)
 
+
+
     
     % Check if max_index is too close to min_index or same as it
     if max_index == min_index || (max_index - min_index) < 10
         max_index = min_vals_2(2);
     end
+
+    % Frequency-specific labels
+    start_label = sprintf('%.1f_Hz_Start', roundedIndex);
+    end_label = sprintf('%.1f_Hz_End', roundedIndex);
+    start_index_label = sprintf('%.1f_Hz_Index_Start',  roundedIndex);
+    end_index_label = sprintf('%.1f_Hz_Index_End',  roundedIndex);
+
+    % First row: labels
+    time_labels = {start_label, end_label, start_index_label, end_index_label};
+
+    %  Second row: numeric data, converted to cell format
+    indexed_time_data = [cleanTime(min_index), cleanTime(max_index), min_index, max_index];
+    indexed_time_data_cell = num2cell(indexed_time_data);
+
+    % Combine both rows into one cell array
+    % Append new data to growing cell array
+    time_data = [time_data; time_labels; indexed_time_data_cell];
+
 
 
     time_vals=cleanTime(min_index:max_index);
@@ -68,9 +91,10 @@ for index=2:.2:3.8
     filenameFig = fullfile(folder, sprintf('%.1f_HZ_TimevsForce_Cleaned.fig', roundedIndex));
     saveas(gcf, filenameFig);
 
-
-
 end
 
+% Save the full combined data at the end
+csv_filename = fullfile(folder, 'Time_Labels_and_Data.csv');
+writecell(time_data, csv_filename);
 
 
