@@ -5,7 +5,7 @@ for index=.6:.1:2
     loop_max=0;
     % Round index to 1 decimal place to avoid floating point issues
     roundedIndex = round(index, 1);
-    filename = sprintf("C:\\Users\\15405\\OneDrive\\Desktop\\Career\\ETHZ\\ETHZ Work\\HardwareOutput\\Real-to-Sim-tests\\%.1f.csv", roundedIndex);
+    filename = sprintf("C:\\Users\\15405\\OneDrive\\Desktop\\Career\\ETHZ\\ETHZ Work\\HardwareOutput\\%.1f.csv", roundedIndex);
     data = readtable(filename);
 
     % Extract column 2 as strings, force, row 2 to match with the row for
