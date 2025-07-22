@@ -10,7 +10,7 @@ from datetime import datetime
 
 #goal of code is to maximize the number of touches of the force sensor, EQUALLY, amongst the testing
 #parameters are force-amplification damping and stiffness, as well as tendon stiffness and damping
-model = mujoco.MjModel.from_xml_path("xmlfish2.xml")  
+model = mujoco.MjModel.from_xml_path("../FishFinalSetup.xml")  
 data = mujoco.MjData(model)
 
 
