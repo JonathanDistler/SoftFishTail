@@ -1,6 +1,9 @@
-%goal is to parse over the force vs time graphs and determine the ranges for which the motor has stopped working and the range after the motor has stopped working. conditions are semi-arbitrary. A lot of them were hardcoded visually. Next step would be to implement the cv script to determine when it touches a wall-fish's head angle too great
 figure;  % creates a new figure each loop
+
+time_data=[];
+
 for index=2:.2:3.8
+    indexed_time_date=[];
     roundedIndex = round(index, 1);
     
     filename = sprintf("C:\\Users\\15405\\OneDrive\\Desktop\\Career\\ETHZ\\ETHZ Work\\HardwareOutput\\%.1f_unfiltered.csv", roundedIndex);
@@ -47,11 +50,25 @@ for index=2:.2:3.8
     max_index=min_vals(1)
     min_index=min_vals_2(1)
 
+
+
     
     % Check if max_index is too close to min_index or same as it
     if max_index == min_index || (max_index - min_index) < 10
         max_index = min_vals_2(2);
     end
+
+    indexed_time_data = [cleanTime(min_index), cleanTime(max_index), min_index, max_index];
+
+    start_label = sprintf('%.1f_Hz_Start', roundedIndex);
+    end_label = sprintf('%.1f_Hz_End', roundedIndex);
+    start_index_label = sprintf('%.1f_Hz_Index_Start',  roundedIndex);
+    end_index_label = sprintf('%.1f_Hz_Index_End',  roundedIndex);
+    time_labels = {start_label, end_label};  % Use cell array for strings
+
+    % Append to time_data: labels row, then numeric data row
+    time_data = [time_data; time_labels; num2cell(indexed_time_data)]
+
 
 
     time_vals=cleanTime(min_index:max_index);
@@ -68,9 +85,13 @@ for index=2:.2:3.8
     filenameFig = fullfile(folder, sprintf('%.1f_HZ_TimevsForce_Cleaned.fig', roundedIndex));
     saveas(gcf, filenameFig);
 
-
-
 end
+
+% Define filename and path
+csv_filename = fullfile(folder, sprintf('Time_Labels_and_Data.csv',roundedIndex));
+
+% Write the cell array to a CSV file
+writecell(time_data, csv_filename);
 
 
 
