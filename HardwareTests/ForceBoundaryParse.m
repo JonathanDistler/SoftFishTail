@@ -1,6 +1,6 @@
 figure;  % creates a new figure each loop
 
-time_data=[];
+time_data = {};  % initialize once before the loop
 
 for index=2:.2:3.8
     indexed_time_date=[];
@@ -72,7 +72,8 @@ for index=2:.2:3.8
     indexed_time_data_cell = num2cell(indexed_time_data);
 
     % Combine both rows into one cell array
-    time_data = [time_labels; indexed_time_data_cell];
+    % Append new data to growing cell array
+    time_data = [time_data; time_labels; indexed_time_data_cell];
 
 
 
@@ -92,11 +93,8 @@ for index=2:.2:3.8
 
 end
 
-% Define filename and path
-csv_filename = fullfile(folder, sprintf('Time_Labels_and_Data.csv',roundedIndex));
-
-% Write the cell array to a CSV file
+% Save the full combined data at the end
+csv_filename = fullfile(folder, 'Time_Labels_and_Data.csv');
 writecell(time_data, csv_filename);
-
 
 
