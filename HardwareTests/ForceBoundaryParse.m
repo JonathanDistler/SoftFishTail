@@ -58,16 +58,21 @@ for index=2:.2:3.8
         max_index = min_vals_2(2);
     end
 
-    indexed_time_data = [cleanTime(min_index), cleanTime(max_index), min_index, max_index];
-
+    % Frequency-specific labels
     start_label = sprintf('%.1f_Hz_Start', roundedIndex);
     end_label = sprintf('%.1f_Hz_End', roundedIndex);
     start_index_label = sprintf('%.1f_Hz_Index_Start',  roundedIndex);
     end_index_label = sprintf('%.1f_Hz_Index_End',  roundedIndex);
-    time_labels = {start_label, end_label};  % Use cell array for strings
 
-    % Append to time_data: labels row, then numeric data row
-    time_data = [time_data; time_labels; num2cell(indexed_time_data)]
+    % First row: labels
+    time_labels = {start_label, end_label, start_index_label, end_index_label};
+
+    %  Second row: numeric data, converted to cell format
+    indexed_time_data = [cleanTime(min_index), cleanTime(max_index), min_index, max_index];
+    indexed_time_data_cell = num2cell(indexed_time_data);
+
+    % Combine both rows into one cell array
+    time_data = [time_labels; indexed_time_data_cell];
 
 
 
