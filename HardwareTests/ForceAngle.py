@@ -135,7 +135,7 @@ for freq in np.arange(start_idx,3.9, index_inc):  # 2.2-3.8 inclusive
     plt.plot(df_force_head["Time (s)"], df_force_head["Force-X (N)"], label="Force-X")
     plt.plot(df_force_head["Time (s)"], df_force_head["Force-Y (N)"], label="Force-Y")  # second force component
     plt.xlabel("Time (s)")
-    plt.ylabel("Force (N)")
+    plt.ylabel("Force (Kg)")
     plt.title(f"Time vs. Force Components in Direction of Fish's Head at {freq} hz")
     plt.grid(True)
     plt.legend()  # shows labels for both lines
