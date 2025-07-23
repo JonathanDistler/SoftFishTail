@@ -1,8 +1,8 @@
 %parses through all of my different frequency files to determine the maximum force output-it did require specfici naming conventions of the csvs, mainly {frequency.0}.csv
 clear max
 max_val=0;
-%frequency increases at .1 hertz at a time from .6 to 2.0
-for index=.6:.1:2
+%frequency increases at .1 hertz at a time from 1 to 4 hz
+for index=1.0:.2:4.0
     loop_max=0;
     % Round index to 1 decimal place to avoid floating point issues
     roundedIndex = round(index, 1);
