@@ -1,5 +1,10 @@
 %goal of this script is to take the stiffness and damping values from the Nelder Mead optimization and produce lines of best fit
 
+%TS: 0	0	0	0	0	0	0	0
+%TD: -0.6361	-9.7548	-60.5218	-195.0368	-348.6216	-341.4805	-167.9124	-11.5865
+%JS: 1.6285	25.2414	158.9145	522.3062	958.0780	968.3865	490.1880	154.4915
+%JD: 0.3917	5.9613	36.9021	119.8924	219.4747	223.7789	114.7940	52.2577
+
 %tendon stiffness had been -1.66e-6 ~0
 ctrlrange=[-4,-3.5,-3,-2.5,-2,-1.5,-1,-.5]
 tendonstiff=[0,0,0,0,0, 0,0, 0]
