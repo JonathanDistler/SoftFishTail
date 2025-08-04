@@ -1,7 +1,7 @@
 clc
 clf
 
-%function to derive position (alpha) wrt the center of the motor for the first linkage in a soft-fish tail. Uses Matlab function used throughout Dr. Savransky's Cornell MAE Dynamics course
+%function to derive position (alpha) wrt the center of the motor 
 function dz = springfish(t, z, k, h, d, w, l0, M, I)
     %from hand calcs, theta is the angular velocity times time. . . with cw
     %it just moves the graph forward pi/2 radians
@@ -14,11 +14,11 @@ function dz = springfish(t, z, k, h, d, w, l0, M, I)
     
     %just defining a lot of the numerators and denominators from my
     %hand-calcs
-    denom = sqrt((h + d * sin(theta))^2 + (d - d * cos(theta))^2);
-    num = -k * (abs(h + d * sin(theta)) + abs(d - d * cos(theta)) - l0);
+    denom = sqrt((h - d * sin(theta))^2 + (-d +d * cos(theta))^2);
+    num = -k * (abs(h - d * sin(theta)) + abs(-d + d * cos(theta)) - l0);
 
-    num1 = h + d * sin(theta);
-    num2 = d - d * cos(theta);
+    num1 = h - d * sin(theta);
+    num2 = d +d * cos(theta);
 
     mult1 = d * (cos(theta) * cos(alpha) + sin(theta) * sin(alpha));
     mult2 = -d * (cos(theta) * sin(alpha) - sin(theta) * cos(alpha));
