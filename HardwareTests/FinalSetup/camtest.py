@@ -6,6 +6,11 @@ import os
 import sys
 import subprocess
 
+####Write the desired frequency below##########
+desiredFreq=0.2
+###############################################
+
+
 #uses an Oak-D camera to write videos. Maintains a true frame rate at 30 FPS. At higher frame rates, it speed up as previously, however, not as dramatically. 
 #starts timestamp at top of all files, formatted the same way 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -38,7 +43,6 @@ xout = pipeline.createXLinkOut()
 xout.setStreamName("video")
 cam_rgb.preview.link(xout.input)
 
-desiredFreq=0.2
 
 output_dir = "/home/srl-slim-tim/ForceTest/ForceTest2"
 
