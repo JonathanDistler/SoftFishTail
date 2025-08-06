@@ -4,6 +4,7 @@ import numpy as np
 
 
 #opens the csv written by the force head angle script and plots the average magnitude of each force component
+#the csv is arbitrarily placed in any folder
 csv_name = "/home/srl-slim-tim/running_sum.csv"
 df = pd.read_csv(csv_name, header=None)
 
