@@ -4,7 +4,9 @@ import os
 import psutil
 
 # Remove previous signal files safely
+#change to same folder as the camera control file and the serial-communicaiton file
 signal_file = "/home/srl-slim-tim/Dynamixel_Control/softFish/CombinedTesting/camera_started.txt"
+#not necessary, but if needed, change to same folder as the camera control file and the serial-communication file
 #signal_file2 = "/home/srl-slim-tim/Dynamixel_Control/softFish/CombinedTesting/terminate.txt"
 
 for f in [signal_file]:
@@ -14,6 +16,7 @@ for f in [signal_file]:
 print("Starting camtest.py (Camera)...")
 
 #could change to camtest2.py to check new version , had been camtest.py
+#change the pathway to be the absolute pathway to the cameratest script
 p1 = subprocess.Popen(["python3", "/home/srl-slim-tim/Dynamixel_Control/softFish/CombinedTesting/camtest.py"])
 
 # Wait for camera to start, then flag sent when camera is started
@@ -24,9 +27,11 @@ while not os.path.exists(signal_file):
 print("Camera signal detected. Launching ForceTimeSerialComm.py and positionControl2.py...")
 
 #had been forcetimeserialcomm2.py
+#change to the same pathway as the forcetimeSerialComm script
 p2 = subprocess.Popen(["python3", "/home/srl-slim-tim/Dynamixel_Control/softFish/CombinedTesting/ForceTimeSerialComm2.py"])
 
 parent_dir = "/home/srl-slim-tim/Dynamixel_Control/softFish"
+#change to the same absolute pathway as the position control, which needs to be one folder below the other scripts, given the Dynamixel Class forking from MattFern
 p3 = subprocess.Popen(["python3", "positionControl3.py"], cwd=parent_dir)
 
 # Give processes some time to start
