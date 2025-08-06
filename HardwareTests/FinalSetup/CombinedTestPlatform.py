@@ -24,7 +24,7 @@ print("Waiting for camera_started.txt...")
 while not os.path.exists(signal_file):
     time.sleep(0.2)
 
-print("Camera signal detected. Launching ForceTimeSerialComm.py and positionControl2.py...")
+print("Camera signal detected. Launching ForceTimeSerialComm.py and positionControl.py...")
 
 #had been forcetimeserialcomm2.py
 #change to the same pathway as the forcetimeSerialComm script
@@ -32,7 +32,7 @@ p2 = subprocess.Popen(["python3", "/home/srl-slim-tim/Dynamixel_Control/softFish
 
 parent_dir = "/home/srl-slim-tim/Dynamixel_Control/softFish"
 #change to the same absolute pathway as the position control, which needs to be one folder below the other scripts, given the Dynamixel Class forking from MattFern
-p3 = subprocess.Popen(["python3", "positionControl3.py"], cwd=parent_dir)
+p3 = subprocess.Popen(["python3", "positionControl.py"], cwd=parent_dir)
 
 # Give processes some time to start
 time.sleep(1)
