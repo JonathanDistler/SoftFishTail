@@ -21,13 +21,13 @@
         <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512"/>
         <texture name="texplane" type="2d" builtin="checker" rgb1=".15 .2 .35" rgb2=".2 .3 .45" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
         <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="10 10" texuniform="true"/>
-        <mesh name="tailMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tailV2.STL" scale="0.0015 0.0015 0.0015" />
-        <mesh name="headMesh" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\headExternal.STL" scale="0.0015 0.0015 0.0015" />
-        <mesh name="Tank" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\glassTank.STL" scale="0.0015 0.0015 0.0025" />
-        <mesh name="loadCell" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\loadCell.STL" scale="0.015 0.025 0.025" />
-        <mesh name="4040" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\4040_L1.STL" scale="0.0025 0.0025 0.0025" />
-        <mesh name="tubeConnector" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\tubeConnector.STL" scale="0.0015 0.0025 0.0025" />
-        <mesh name="4040_smaller" file="C:\Users\15405\OneDrive\Desktop\Career\ETHZ\ETHZ Work\mujoco-3.3.2-windows-x86_64\model\mesh\4040_L1.STL" scale="0.0025 0.0025 0.0015" />
+        <mesh name="tailMesh" file="tailV2.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="headMesh" file="headExternal.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="Tank" file="glassTank.STL" scale="0.0015 0.0015 0.0025" />
+        <mesh name="loadCell" file="loadCell.STL" scale="0.015 0.025 0.025" />
+        <mesh name="4040" file="4040_L1.STL" scale="0.0025 0.0025 0.0025" />
+        <mesh name="tubeConnector" file="tubeConnector.STL" scale="0.0015 0.0025 0.0025" />
+        <mesh name="4040_smaller" file="4040_L1.STL" scale="0.0025 0.0025 0.0015" />
         
         <material name="acrylic" rgba="0.576470588235 0.694117647059 0.8 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
