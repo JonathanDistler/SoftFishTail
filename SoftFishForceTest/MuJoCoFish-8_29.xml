@@ -63,21 +63,21 @@
         
 
         <body name="ForceAmp" pos=".5 0 .55">
-                    <geom name="horizontalHinge" type="cylinder" pos="0 0 0" size=".0225 .415" material="alu" mass=".001" quat=".5 -.5 .5 .5" contype="1" conaffinity="1" />
-                    <geom name="tube1" type="mesh" mesh="tubeConnector" pos=".05 -.075 -.2" mass=".001" contype="0" conaffinity="0" quat=".7071 0 0 .7071"/>
-                    <geom name="tube2" type="mesh" mesh="tubeConnector" pos="-.05 .075 -.2" mass=".001" contype="0" conaffinity="0" quat=".7071 0 0 -.7071" />
-                    <joint name="hingeY" pos="0 0 0" type="hinge" axis="0 1 0" stiffness="10" damping="1" />
+                    <geom name="horizontalHinge" type="cylinder" pos="0 0 -.025" size=".0125 .4" material="alu" mass=".001" quat=".5 -.5 .5 .5" contype="0" conaffinity="0" />
+                    <geom name="tube1" type="mesh" mesh="tubeConnector" pos=".05 -.075 -.225" mass=".001" contype="0" conaffinity="0" quat=".7071 0 0 .7071"/>
+                    <geom name="tube2" type="mesh" mesh="tubeConnector" pos="-.05 .075 -.225" mass=".001" contype="0" conaffinity="0" quat=".7071 0 0 -.7071" />
+                    <joint name="hingeY" pos="0 0 0" type="hinge" axis="0 1 0" stiffness="0" damping="0" />
 
                     <body name="ForceAmp2" pos="0 0 0">
-                        <geom name="verticalHinge" type="cylinder" pos="0 0 -0.1425" size=".0225 0.2" contype="0" conaffinity="0" />
-                        <geom name="ball" type="sphere" size="0.025" rgba="1 0 0 1" mass="0.1" pos="0 0 -0.3175"/>
+                        <geom name="verticalHinge" type="cylinder" pos="0 0 -0.1925" size=".0125 0.2" contype="0" conaffinity="0" />
+                        <geom name="ball" type="sphere" size="0.0125" rgba="1 0 0 1" mass="0.1" pos="0 0 -0.3675"/>
                         <site name="verticalRodSite" pos="0 0 .07" size="0.025" rgba=".1 .1 .1 0"/>
                     </body>
 
                     <!-- adds a slider range to keep the fish always propogating forward from its original com like in the simulation -->
         <!-- add a slider that keeps the head moving forward-->
         <!-- adds a soft-constraint on the body to speed up simulation time -->
-        <body pos=".35 0 0">
+        <body pos="-.15 0 -.55">
             <joint name="headX" pos="0.02432519 0 0.00306519" type="slide" axis="1 0 0" stiffness="0" damping="0" range="-0.025669489880513867 0.003387345022720789"/>
             <joint name="headY" pos="0.02432519 0 0.00306519" type="slide" axis="0 1 0" stiffness="0" damping="0" range="-0.025 0.025"/>
             <site name="COM" pos="0.02432519 0 0.00306519" size="0.015" material="marker"/>
@@ -204,8 +204,8 @@
             <geom name="4040v1" type="mesh" mesh="4040" pos="0 -.42 0" mass=".001" contype="0" conaffinity="0" quat=".7071 0 .7071 0"/>
             <geom name="4040v2" type="mesh" mesh="4040" pos="0 .35 0" mass=".001" contype="0" conaffinity="0" quat=".7071 0 .7071 0"/>
 
-            <geom name="4040v3" type="mesh" mesh="4040_smaller" pos="0 .35 -.1" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
-            <geom name="4040v4" type="mesh" mesh="4040_smaller" pos="1.1 .35 -.1" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+            <geom name="4040v3" type="mesh" mesh="4040_smaller" pos="0 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+            <geom name="4040v4" type="mesh" mesh="4040_smaller" pos="1.1 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
         </body>
 
         
