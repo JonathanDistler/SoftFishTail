@@ -19,7 +19,7 @@ output_dir=r"c:\MuJoCo"
 
 #plots the figures
 plt.figure()
-plt.plot(time, force, "r", label="Force")
+plt.plot(time[405:], force[405:], "r", label="Force")
 plt.xlabel("Time (s)")
 plt.ylabel("Force (N)")
 plt.title("Time vs. Force")
@@ -29,7 +29,7 @@ plt.savefig(f"{output_dir}/ForcevsTime.png")
 plt.show()
 
 plt.figure()
-plt.plot(time, pos, "b", label="Position")
+plt.plot(time[405:], pos[405:], "b", label="Position")
 plt.xlabel("Time (s)")
 plt.ylabel("Position (m)")
 plt.title("Time vs. Position")
@@ -62,14 +62,3 @@ print("Median:",median)
 mean=(df[force_name]).mean()
 print("Mean:",mean)
 
-#plots the force vs the average force offset
-force=force-mean
-plt.figure()
-plt.plot(time, force, "r", label="Force")
-plt.xlabel("Time (s)")
-plt.ylabel("Force (N)")
-plt.title("Time vs. Force Offset")
-plt.legend()
-plt.grid(True)
-plt.savefig(f"{output_dir}/ForcevsTimeOffset.png")
-plt.show()

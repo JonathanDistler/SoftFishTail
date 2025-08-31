@@ -32,6 +32,7 @@
         <mesh name="4040" file="4040_L1.STL" scale="0.0015 0.0015 0.0025" />
         <mesh name="tubeConnector" file="tubeConnector.STL" scale="0.0015 0.0025 0.0025" />
         <mesh name="4040_smaller" file="4040_L1.STL" scale="0.0015 0.0015 0.0015" />
+        <mesh name="4040_small" file="4040_L1.STL" scale="0.0015 0.0015 0.00175" />
         
         <material name="acrylic" rgba="0.576470588235 0.694117647059 0.8 0.2"/>
         <material name="alu" reflectance="0.9" specular="0.9" shininess="0.9" rgba=".7 .7 .7 1"/>
@@ -205,7 +206,12 @@
             <geom name="4040v2" type="mesh" mesh="4040" pos="0 .35 0" mass=".001" contype="0" conaffinity="0" quat=".7071 0 .7071 0"/>
 
             <geom name="4040v3" type="mesh" mesh="4040_smaller" pos="0 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
-            <geom name="4040v4" type="mesh" mesh="4040_smaller" pos="1.1 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+            <geom name="4040v4" type="mesh" mesh="4040_smaller" pos="1.15 .35 -.06" mass=".001" contype="0" conaffinity="0" quat=".7071 .7071 0 0"/>
+
+            <geom name="4040v5" type="mesh" mesh="4040_smaller" pos="0 -.42 -.75" mass=".001" contype="0" conaffinity="0" />
+            <geom name="4040v6" type="mesh" mesh="4040_smaller" pos="1.15 .35 -.75" mass=".001" contype="0" conaffinity="0" />
+            <geom name="4040v7" type="mesh" mesh="4040_smaller" pos="1.15 -.42 -.75" mass=".001" contype="0" conaffinity="0" />
+            <geom name="4040v8" type="mesh" mesh="4040_smaller" pos="0 .35 -.75" mass=".001" contype="0" conaffinity="0"/>
         </body>
 
         
